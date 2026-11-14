@@ -102,22 +102,40 @@
     .fade-up { opacity: 0; transform: translateY(24px); animation: fadeUp 1s cubic-bezier(.2, .8, .2, 1) forwards; }
     @keyframes fadeUp { to { opacity: 1; transform: none; } }
 
-    .portrait { position: relative; justify-self: center; width: min(380px, 80vw); aspect-ratio: 1; }
-    .ring { position: absolute; inset: 0; animation: spin 26s linear infinite; }
-    .ring text { font: 500 11.5px "JetBrains Mono", monospace; letter-spacing: 4.2px; fill: var(--muted); text-transform: uppercase; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .photo { position: absolute; inset: 15%; border-radius: 50%; overflow: hidden; }
-    .photo::before { content: ""; position: absolute; inset: -3px; border-radius: 50%; padding: 3px; background: var(--grad); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; z-index: 2; }
-    .mono { display: grid; place-items: center; background: radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--rose) 30%, var(--bg-2)), var(--bg-2) 70%); }
-    .mono span { position: relative; z-index: 1; font-family: "Instrument Serif", serif; font-style: italic; font-size: clamp(80px, 9vw, 120px); line-height: 1; background: var(--grad); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 6s linear infinite; transition: transform .6s; }
-    .portrait:hover .mono span { transform: scale(1.08); }
-    .mono-glow { position: absolute; width: 60%; height: 60%; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--lav) 45%, transparent), transparent 70%); animation: roam 9s ease-in-out infinite alternate; }
-    @keyframes roam { 0% { transform: translate(-30%, -20%); } 50% { transform: translate(25%, 10%); } 100% { transform: translate(-10%, 30%); } }
-    .orbit { position: absolute; inset: 6%; border-radius: 50%; border: 1px dashed var(--line); animation: spin 14s linear infinite reverse; }
-    .orbit i { position: absolute; top: -6px; left: 50%; width: 12px; height: 12px; border-radius: 50%; background: var(--rose); box-shadow: 0 0 18px var(--rose); }
+    .live-wrap { position: relative; justify-self: center; width: min(440px, 100%); }
+    .live { position: relative; border-radius: 26px; border: 1px solid var(--line); background: color-mix(in srgb, var(--code) 88%, transparent); backdrop-filter: blur(14px); color: #f4eaef; overflow: hidden; box-shadow: 0 40px 80px -40px rgba(0, 0, 0, .65), 0 0 0 1px rgba(255, 255, 255, .03) inset; animation: hover 7s ease-in-out infinite; }
+    .live::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; background: linear-gradient(140deg, color-mix(in srgb, var(--rose) 70%, transparent), transparent 40%, transparent 60%, color-mix(in srgb, var(--lav) 70%, transparent)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+    @keyframes hover { 50% { transform: translateY(-10px); } }
+    .live-top { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid rgba(255, 255, 255, .07); font: 12px "JetBrains Mono", monospace; }
+    .live-top .dots { display: flex; gap: 6px; }
+    .live-top .dots i { width: 10px; height: 10px; border-radius: 50%; background: #f28ba8; }
+    .live-top .dots i:nth-child(2) { background: #f6cf7c; } .live-top .dots i:nth-child(3) { background: #8fd9a6; }
+    .live-path { opacity: .55; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .live-pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; background: rgba(111, 211, 155, .14); color: #8fe0b0; font-size: 11px; letter-spacing: .1em; }
+    .live-pill b { width: 7px; height: 7px; border-radius: 50%; background: #6fd39b; animation: blink 1.4s ease-in-out infinite; }
+    @keyframes blink { 50% { opacity: .25; } }
+    .live-flow { display: block; width: 100%; height: auto; padding: 16px 16px 4px; }
+    .lf-line { stroke: rgba(255, 255, 255, .1); stroke-width: 2; }
+    .lf-dash { stroke: #ec9db6; stroke-width: 2; stroke-dasharray: 5 9; opacity: .55; animation: dash 1.2s linear infinite; }
+    .lf-node rect { fill: #1c1420; stroke: rgba(255, 255, 255, .12); transition: stroke .3s, fill .3s; }
+    .lf-node text { fill: #f4eaef; font: 600 11.5px "Manrope", sans-serif; text-anchor: middle; }
+    .lf-node.hit rect { stroke: #ec9db6; fill: #2a1825; }
+    .lf-pkt { fill: #f2c9a0; filter: drop-shadow(0 0 6px #f2c9a0); }
+    .live-log { height: 196px; padding: 8px 18px 4px; font: 12px/1.95 "JetBrains Mono", monospace; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; -webkit-mask: linear-gradient(transparent, #000 30%); mask: linear-gradient(transparent, #000 30%); }
+    .log-line { display: flex; gap: 10px; white-space: nowrap; animation: logIn .45s ease both; }
+    @keyframes logIn { from { opacity: 0; transform: translateY(8px); } }
+    .log-line .t { opacity: .38; }
+    .log-line .m { color: #f5a3bd; min-width: 34px; }
+    .log-line .p { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+    .log-line .s { color: #8fd9a6; }
+    .log-line .ms { opacity: .5; min-width: 44px; text-align: right; }
+    .live-foot { display: flex; align-items: center; gap: 14px; padding: 10px 18px 16px; font: 11px "JetBrains Mono", monospace; color: rgba(244, 234, 239, .45); text-transform: uppercase; letter-spacing: .12em; }
+    .live-foot svg { flex: 1; height: 36px; }
+    .spark { fill: none; stroke: #ec9db6; stroke-width: 1.6; vector-effect: non-scaling-stroke; }
+    .spark-fill { fill: rgba(236, 157, 182, .14); }
     .tag { position: absolute; padding: 9px 14px; border-radius: 14px; background: color-mix(in srgb, var(--bg) 75%, transparent); backdrop-filter: blur(10px); border: 1px solid var(--line); font-size: 13px; line-height: 1.3; animation: float 6s ease-in-out infinite; white-space: nowrap; }
     .tag b { display: block; font-family: "Instrument Serif", serif; font-size: 22px; font-weight: 400; }
-    .tag.t1 { left: -18%; top: 22%; } .tag.t2 { right: -14%; bottom: 16%; animation-delay: -3s; }
+    .tag.t1 { left: -16%; top: -34px; } .tag.t2 { right: -12%; bottom: -34px; animation-delay: -3s; }
     @keyframes float { 50% { transform: translateY(-14px); } }
     .scroll-hint { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); width: 24px; height: 40px; border: 1.5px solid var(--muted); border-radius: 14px; opacity: .6; }
     .scroll-hint::after { content: ""; position: absolute; left: 50%; top: 8px; width: 3px; height: 8px; margin-left: -1.5px; border-radius: 2px; background: var(--muted); animation: wheel 1.8s ease-in-out infinite; }
@@ -350,8 +368,8 @@
       .nav-links.open { display: flex; }
       .burger { display: grid; }
       .hero .wrap, .about, .tests, .proj, .exp, .edu, .talk { grid-template-columns: 1fr; }
-      .portrait { order: -1; width: min(300px, 74vw); }
-      .tag.t1 { left: -6%; } .tag.t2 { right: -6%; }
+      .live-wrap { width: min(440px, 100%); }
+      .tag.t1 { left: -2%; top: -18px; } .tag.t2 { right: -2%; bottom: -22px; }
       .api { position: static; }
       .exp-tabs { flex-direction: row; overflow-x: auto; }
       .exp-tab { white-space: nowrap; }
@@ -406,13 +424,28 @@
           <a class="btn magnetic" href="#contact">Get in touch</a>
         </div>
       </div>
-      <div class="portrait fade-up" style="animation-delay:.3s">
-        <svg class="ring" viewBox="0 0 300 300" aria-hidden="true">
-          <defs><path id="circle" d="M150,150 m-138,0 a138,138 0 1,1 276,0 a138,138 0 1,1 -276,0"/></defs>
-          <text><textPath href="#circle">AI Engineer ✦ Backend Developer ✦ M.Tech AI, MANIT ✦ Bhopal ✦</textPath></text>
-        </svg>
-        <div class="orbit"><i></i></div>
-        <div class="photo mono" aria-hidden="true"><span>AA</span><i class="mono-glow"></i></div>
+      <div class="live-wrap fade-up" style="animation-delay:.3s">
+        <div class="live" aria-label="Animated illustration of a backend serving AI requests">
+          <div class="live-top">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <span class="live-path">~/backend · tail -f api.log</span>
+            <span class="live-pill"><b></b>LIVE</span>
+          </div>
+          <svg class="live-flow" viewBox="0 0 360 74" aria-hidden="true">
+            <path class="lf-line" d="M44 37 H316"/>
+            <path class="lf-dash" d="M44 37 H316"/>
+            <g class="lf-node" id="lfn0"><rect x="6" y="20" width="76" height="34" rx="12"/><text x="44" y="41">Request</text></g>
+            <g class="lf-node" id="lfn1"><rect x="98" y="20" width="76" height="34" rx="12"/><text x="136" y="41">Django</text></g>
+            <g class="lf-node" id="lfn2"><rect x="190" y="20" width="76" height="34" rx="12"/><text x="228" y="41">LLM · RAG</text></g>
+            <g class="lf-node" id="lfn3"><rect x="282" y="20" width="72" height="34" rx="12"/><text x="318" y="41">Postgres</text></g>
+            <circle class="lf-pkt" id="lfPkt" r="5" cx="44" cy="37"/>
+          </svg>
+          <div class="live-log" id="liveLog" aria-hidden="true"></div>
+          <div class="live-foot">
+            <span>traffic</span>
+            <svg viewBox="0 0 200 36" preserveAspectRatio="none" aria-hidden="true"><path id="spark" class="spark"/><path id="sparkFill" class="spark-fill"/></svg>
+          </div>
+        </div>
         <div class="tag t1"><b>600+</b>APIs in production</div>
         <div class="tag t2"><b>Silver Medal</b>B.Tech in AI</div>
       </div>
@@ -801,6 +834,50 @@
     setTimeout(type, del ? 40 : 85);
   };
   if (reduce) typed.textContent = roles[0]; else setTimeout(type, 900);
+
+  // hero: live system card (request flow, streaming log, traffic sparkline)
+  const liveLog = $('#liveLog'), pkt = $('#lfPkt'), spark = $('#spark'), sparkFill = $('#sparkFill');
+  const lfNodes = [0, 1, 2, 3].map(i => $('#lfn' + i)), lfX = [44, 136, 228, 318];
+  const reqs = [
+    ['POST', '/api/agent/call', 200], ['GET', '/api/payroll/run?mode=test', 200], ['POST', '/api/rag/ask', 200],
+    ['POST', '/api/ocr/invoice', 201], ['POST', '/api/tally/sync/grn', 200], ['GET', '/api/hrms/attendance', 200],
+    ['POST', '/api/whatsapp/webhook', 200], ['GET', '/api/procurement/po', 200], ['PATCH', '/api/stores/batch/42', 200],
+    ['GET', '/api/leaves/balance', 200], ['POST', '/api/forecast/price', 200], ['POST', '/api/faces/match', 200]
+  ];
+  let ri2 = Math.floor(Math.random() * reqs.length);
+  const addLog = () => {
+    const [m, p, s] = reqs[ri2++ % reqs.length];
+    const t = new Date().toLocaleTimeString('en-GB', { hour12: false });
+    const ms = 18 + Math.floor(Math.random() * (p.includes('rag') || p.includes('agent') ? 420 : 90));
+    liveLog.insertAdjacentHTML('beforeend', `<div class="log-line"><span class="t">${t}</span><span class="m">${m}</span><span class="p">${p}</span><span class="s">${s}</span><span class="ms">${ms}ms</span></div>`);
+    while (liveLog.children.length > 9) liveLog.firstElementChild.remove();
+  };
+  for (let i = 0; i < 6; i++) addLog();
+  let traffic = Array.from({ length: 40 }, (_, i) => 18 + Math.sin(i / 3) * 6 + Math.random() * 6);
+  const drawSpark = () => {
+    const pts = traffic.map((v, i) => `${(i / (traffic.length - 1) * 200).toFixed(1)} ${(36 - v).toFixed(1)}`);
+    spark.setAttribute('d', 'M' + pts.join(' L'));
+    sparkFill.setAttribute('d', 'M0 36 L' + pts.join(' L') + ' L200 36 Z');
+  };
+  drawSpark();
+  if (!reduce) {
+    setInterval(() => { if (!document.hidden) addLog(); }, 1300);
+    setInterval(() => {
+      if (document.hidden) return;
+      const last = traffic[traffic.length - 1];
+      traffic = [...traffic.slice(1), Math.max(6, Math.min(32, last + (Math.random() - .5) * 9))];
+      drawSpark();
+    }, 450);
+    const cycle = 2600;
+    const movePkt = t => {
+      const k = (t % cycle) / cycle, e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      const x = lfX[0] + (lfX[3] - lfX[0]) * e;
+      pkt.setAttribute('cx', x.toFixed(1));
+      lfNodes.forEach((n, i) => n.classList.toggle('hit', Math.abs(x - lfX[i]) < 26));
+      requestAnimationFrame(movePkt);
+    };
+    requestAnimationFrame(movePkt);
+  }
 
   // marquee
   const tech = ['Django', 'LangChain', 'RAG', 'PostgreSQL', 'AI Agents', 'Django REST Framework', 'FAISS', 'Gemini', 'Tool calling', 'PyTorch', 'OpenCV', 'Docker', 'GCP', 'Locust', 'Tally', 'Fine-tuning'];
