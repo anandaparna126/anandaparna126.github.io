@@ -98,15 +98,7 @@
       background: linear-gradient(180deg, #ffe4d6 0%, #fde1e8 26%, #f6e3f6 52%, #ece6fb 74%, #fbf7f4 100%); background-size: 100% 180%; animation: dawn 26s ease-in-out infinite alternate; }
     :root[data-theme="light"] .sky { opacity: 1; }
     @keyframes dawn { to { background-position: 0 100%; } }
-    .sun { position: absolute; top: -22vmax; right: -12vmax; width: 60vmax; height: 60vmax; border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 223, 178, .95) 0%, rgba(255, 196, 170, .6) 18%, rgba(250, 172, 196, .28) 40%, rgba(220, 190, 250, .12) 58%, transparent 70%); animation: sunGlow 10s ease-in-out infinite alternate; }
-    .sun::after { content: ""; position: absolute; inset: -20%; border-radius: 50%;
-      background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, .22) 0deg 3deg, transparent 3deg 15deg);
-      -webkit-mask: radial-gradient(circle, transparent 12%, #000 22%, transparent 62%); mask: radial-gradient(circle, transparent 12%, #000 22%, transparent 62%);
-      animation: sunSpin 140s linear infinite; }
     .sky::after { content: ""; position: absolute; left: -10%; right: -10%; bottom: -10%; height: 45%; background: radial-gradient(ellipse at 50% 100%, rgba(214, 196, 250, .45), transparent 70%); animation: haze 18s ease-in-out infinite alternate; }
-    @keyframes sunGlow { to { transform: scale(1.07); filter: saturate(1.15); } }
-    @keyframes sunSpin { to { transform: rotate(360deg); } }
     @keyframes haze { to { transform: translateX(6%) scaleY(1.1); } }
     :root[data-theme="light"] .b1 { background: #f2b6c8; } :root[data-theme="light"] .b2 { background: #cfc2f5; } :root[data-theme="light"] .b3 { background: #f6d6b6; }
     @keyframes drift1 { to { transform: translate(-120px, 140px) scale(1.15); } }
@@ -544,7 +536,7 @@
   <script data-goatcounter="https://aparnaa.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
-  <div class="sky" aria-hidden="true"><i class="sun"></i></div>
+  <div class="sky" aria-hidden="true"></div>
   <canvas id="net" aria-hidden="true"></canvas>
   <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
   <div class="cursor-glow" id="glow"></div>
