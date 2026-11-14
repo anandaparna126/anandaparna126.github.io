@@ -389,6 +389,8 @@
       .track span { font-size: 26px; }
     }
   </style>
+  <!-- Visitor stats: https://aparnaa.goatcounter.com (localhost visits are not counted) -->
+  <script data-goatcounter="https://aparnaa.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
   <canvas id="net" aria-hidden="true"></canvas>
@@ -407,7 +409,7 @@
     <div class="nav-right">
       <button class="icon" id="theme" aria-label="Switch light or dark theme">☀</button>
       <button class="icon burger" id="burger" aria-label="Open menu">☰</button>
-      <a class="btn main magnetic" href="resume/Aparna_Anand_Resume.pdf" target="_blank" rel="noopener">Resume <span class="arr">→</span></a>
+      <a class="btn main magnetic" href="resume/Aparna_Anand_Resume.pdf" target="_blank" rel="noopener" data-goatcounter-click="resume-download" data-goatcounter-title="Resume opened (top bar)">Resume <span class="arr">→</span></a>
     </div>
     <div class="progress" id="progress"></div>
   </nav>
@@ -727,11 +729,11 @@
 
       <a class="mail magnetic rv" href="mailto:anandaparna1203@gmail.com">anandaparna1203@gmail.com <span>↗</span></a>
       <div class="socials rv">
-        <a class="btn magnetic" href="https://www.linkedin.com/in/aparna-anand-067697227/" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="btn magnetic" href="https://github.com/anandaparna126" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn magnetic" href="https://www.linkedin.com/in/aparna-anand-067697227/" target="_blank" rel="noopener" data-goatcounter-click="linkedin-click" data-goatcounter-title="LinkedIn opened">LinkedIn</a>
+        <a class="btn magnetic" href="https://github.com/anandaparna126" target="_blank" rel="noopener" data-goatcounter-click="github-click" data-goatcounter-title="GitHub opened">GitHub</a>
         <a class="btn magnetic" href="https://x.com/anand_apar9601" target="_blank" rel="noopener">X</a>
         <a class="btn magnetic" href="blog/index.html">Blog</a>
-        <a class="btn magnetic" href="resume/Aparna_Anand_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+        <a class="btn magnetic" href="resume/Aparna_Anand_Resume.pdf" target="_blank" rel="noopener" data-goatcounter-click="resume-download" data-goatcounter-title="Resume opened (contact)">Resume</a>
       </div>
     </div>
   </section>
@@ -1072,6 +1074,8 @@
   };
   const setMsg = (el, msg, cls) => { el.textContent = msg; el.className = 'form-status ' + (cls || ''); };
   const FALLBACK_NOTE = 'Your email app has opened with everything filled in. Just press Send.';
+  // counts an event in GoatCounter (shows under Pages in the dashboard); never breaks the page
+  const track = (path, title) => { try { window.goatcounter?.count?.({ path, title, event: true }); } catch (e) {} };
 
   // project form
   const form = $('#projectForm'), statusEl = $('#formStatus'), sendBtn = form.querySelector('.send'), sendLabel = form.querySelector('.send-label');
@@ -1085,9 +1089,11 @@
     sendBtn.disabled = true; sendLabel.textContent = 'Sending…'; setMsg(statusEl, '');
     try {
       await deliver(subject, fields, data.email);
+      track('contact-form-sent', `Project form sent: ${data.project_type}`);
       form.reset();
       setMsg(statusEl, "Thank you! Your message is on its way. I'll reply to you by email.", 'ok');
     } catch (err) {
+      track('contact-form-email-app', 'Project form opened email app');
       openMail(subject, fields);
       setMsg(statusEl, FALLBACK_NOTE, 'ok');
     } finally {
@@ -1159,8 +1165,8 @@
     const fields = { Name: data.name, Email: data.email, 'Requested time': when, Topic: data.topic || '(not given)' };
     bkBtn.disabled = true; bkLabel.textContent = 'Booking…'; setMsg(bkStatus, '');
     let sentByMail = false;
-    try { await deliver(subject, fields, data.email); }
-    catch (err) { openMail(subject, fields); sentByMail = true; }
+    try { await deliver(subject, fields, data.email); track('call-booked', 'Call booked'); }
+    catch (err) { track('call-booked-email-app', 'Call request opened email app'); openMail(subject, fields); sentByMail = true; }
     finally { bkBtn.disabled = false; bkLabel.textContent = 'Book the call'; }
     $('#bkGcal').href = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
       + `&text=${encodeURIComponent('30-minute call with Aparna Anand')}`
