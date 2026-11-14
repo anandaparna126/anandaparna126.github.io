@@ -370,6 +370,46 @@
     .cs-p { color: var(--muted); font-size: 15px; margin-bottom: 10px; }
     .cs-p b { color: var(--ink); font-weight: 600; }
 
+    /* OCR demo */
+    .ocr { display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; margin-top: 44px; }
+    .ocr-left, .ocr-right { padding: 22px; border-radius: 28px; border: 1px solid var(--line); background: var(--card); }
+    .ocr-drop { position: relative; min-height: 380px; border-radius: 20px; border: 1.5px dashed color-mix(in srgb, var(--rose) 45%, var(--line)); background: var(--bg); display: grid; place-items: center; overflow: hidden; transition: border-color .2s, background .2s; }
+    .ocr-drop.over { border-color: var(--rose); background: color-mix(in srgb, var(--rose) 8%, var(--bg)); }
+    .ocr-empty { display: grid; justify-items: center; gap: 8px; text-align: center; padding: 30px; }
+    .ocr-empty[hidden] { display: none; }
+    .ocr-empty strong { font-size: 18px; }
+    .ocr-empty span { color: var(--muted); font-size: 14px; }
+    .ocr-icon { width: 76px; height: 76px; border-radius: 22px; display: grid; place-items: center; color: var(--rose); background: color-mix(in srgb, var(--rose) 12%, transparent); margin-bottom: 6px; animation: float 5s ease-in-out infinite; }
+    .ocr-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+    .ocr-stage { position: relative; width: 100%; align-self: start; }
+    .ocr-stage[hidden] { display: none; }
+    .ocr-stage img { display: block; width: 100%; height: auto; }
+    .ocr-boxes { position: absolute; inset: 0; }
+    .ocr-boxes b { position: absolute; border-radius: 3px; border: 1px solid color-mix(in srgb, var(--lav) 60%, transparent); background: color-mix(in srgb, var(--lav) 14%, transparent); animation: boxIn .4s both; }
+    .ocr-boxes b.hit { border: 2px solid var(--rose); background: color-mix(in srgb, var(--rose) 22%, transparent); box-shadow: 0 0 12px color-mix(in srgb, var(--rose) 50%, transparent); }
+    @keyframes boxIn { from { opacity: 0; transform: scale(.6); } }
+    .ocr-beam { position: absolute; left: 0; right: 0; height: 70px; background: linear-gradient(transparent, color-mix(in srgb, var(--rose) 35%, transparent), transparent); animation: beam 2.2s ease-in-out infinite; pointer-events: none; display: none; }
+    .ocr-beam.on { display: block; }
+    .ocr-progress { height: 4px; border-radius: 2px; background: var(--line); margin: 16px 4px 8px; overflow: hidden; }
+    .ocr-progress i { display: block; height: 100%; width: 0; background: var(--grad); transition: width .25s; }
+    .ocr-status { color: var(--muted); font-size: 14px; padding: 0 4px; }
+    .ocr-head { display: flex; justify-content: space-between; align-items: center; font: 500 12px "JetBrains Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--rose); margin-bottom: 14px; }
+    .ocr-conf { color: var(--muted); letter-spacing: 0; text-transform: none; }
+    .ocr-fields { display: grid; gap: 8px; margin: 0; }
+    .ocr-fields div { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: center; padding: 13px 16px; border-radius: 16px; border: 1px solid var(--line); background: var(--bg); transition: border-color .4s, background .4s; }
+    .ocr-fields dt { color: var(--muted); font-size: 13.5px; }
+    .ocr-fields dd { margin: 0; font: 500 15px "JetBrains Mono", monospace; word-break: break-word; }
+    .ocr-fields div.got { border-color: color-mix(in srgb, var(--rose) 45%, var(--line)); background: color-mix(in srgb, var(--rose) 8%, var(--bg)); }
+    .ocr-fields div.got dd { animation: fadeUp .45s both; }
+    .ocr-fields div.miss dd { color: var(--muted); font-family: "Manrope", sans-serif; font-size: 14px; }
+    .ocr-fields div[data-f="total"] dd { font-size: 18px; }
+    .ocr-raw { margin-top: 14px; font-size: 14px; }
+    .ocr-raw summary { cursor: pointer; color: var(--rose); font-weight: 600; }
+    .ocr-raw pre { margin-top: 10px; max-height: 220px; overflow: auto; padding: 14px; border-radius: 14px; background: var(--code); color: #f4eaef; font: 12px/1.6 "JetBrains Mono", monospace; white-space: pre-wrap; }
+    #ocrAgain { margin-top: 14px; }
+    #ocrAgain[hidden] { display: none; }
+    .ocr-note { margin-top: 16px; color: var(--muted); font-size: 13.5px; }
+
     /* github */
     .gh-top { display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 14px; align-items: stretch; margin: 40px 0 18px; }
     .gh-stat { padding: 20px 22px; border-radius: 22px; border: 1px solid var(--line); background: var(--card); }
@@ -450,6 +490,8 @@
       .burger { display: grid; }
       .hero .wrap, .about, .tests, .proj, .exp, .edu, .talk { grid-template-columns: 1fr; }
       .cs-facts { grid-template-columns: 1fr 1fr; }
+      .ocr { grid-template-columns: 1fr; }
+      .ocr-drop { min-height: 300px; }
       .gh-top { grid-template-columns: 1fr 1fr 1fr; }
       .gh-btn { grid-column: 1 / -1; justify-self: start; }
       .gh-repos { grid-template-columns: 1fr 1fr; }
@@ -779,6 +821,55 @@
           <p class="cs-p"><b>The problem.</b> People use the ERP every day, so a broken release stops real work.</p>
           <p class="cs-p"><b>What I built.</b> 97 automated tests across payments, quality checks, stock batches and vendor credit, self-test scripts for HR flows, and a full database backup before any risky change.</p>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="ocr-demo">
+    <div class="wrap">
+      <span class="label rv">Try it yourself</span>
+      <h2 class="rv">Read a bill in <em class="grad-text">seconds.</em></h2>
+      <p class="sub rv">A live version of my OCR work. Drop in a photo of a bill or invoice and it pulls out the fields that matter. It runs entirely in your browser with Tesseract, so your image is never uploaded anywhere.</p>
+
+      <div class="ocr rv">
+        <div class="ocr-left">
+          <div class="ocr-drop" id="ocrDrop">
+            <input type="file" id="ocrFile" accept="image/*" hidden>
+            <div class="ocr-empty" id="ocrEmpty">
+              <div class="ocr-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" width="48" height="48"><path d="M12 6h17l9 9v27H12z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M29 6v9h9M18 24h12M18 30h12M18 36h7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+              </div>
+              <strong>Drop a bill or invoice here</strong>
+              <span>PNG or JPG. Clear photos of printed bills work best.</span>
+              <div class="ocr-actions">
+                <button type="button" class="btn main" id="ocrPick">Choose an image</button>
+                <button type="button" class="btn" id="ocrSample">Use a sample bill</button>
+              </div>
+            </div>
+            <div class="ocr-stage" id="ocrStage" hidden>
+              <img id="ocrImg" alt="The bill being read">
+              <div class="ocr-boxes" id="ocrBoxes" aria-hidden="true"></div>
+              <div class="ocr-beam" id="ocrBeam" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="ocr-progress"><i id="ocrBar"></i></div>
+          <p class="ocr-status" id="ocrStatus" role="status" aria-live="polite">Waiting for a bill.</p>
+        </div>
+
+        <div class="ocr-right">
+          <div class="ocr-head"><span>Extracted fields</span><span class="ocr-conf" id="ocrConf"></span></div>
+          <dl class="ocr-fields" id="ocrFields">
+            <div data-f="vendor"><dt>Vendor</dt><dd>—</dd></div>
+            <div data-f="invoice"><dt>Invoice no.</dt><dd>—</dd></div>
+            <div data-f="date"><dt>Date</dt><dd>—</dd></div>
+            <div data-f="gstin"><dt>GSTIN</dt><dd>—</dd></div>
+            <div data-f="tax"><dt>Tax (GST)</dt><dd>—</dd></div>
+            <div data-f="total"><dt>Total</dt><dd>—</dd></div>
+          </dl>
+          <details class="ocr-raw"><summary>Show all the text it read</summary><pre id="ocrText"></pre></details>
+          <button type="button" class="btn" id="ocrAgain" hidden>Try another bill</button>
+          <p class="ocr-note">In production I pair OCR like this with Gemini and LangChain, which reached 85% field accuracy on 1,000+ real bills.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1500,6 +1591,131 @@
     if (e.isIntersecting) { clearTimeout(convoTimer); playConvo(); } else clearTimeout(convoTimer);
   }), { threshold: .3 }).observe(convo);
   $('#term').addEventListener('click', runTests);
+
+  // ---- OCR demo: Tesseract.js runs in the visitor's browser; the image never leaves the device ----
+  const TESS_SRC = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+  const ocr = {
+    drop: $('#ocrDrop'), file: $('#ocrFile'), empty: $('#ocrEmpty'), stage: $('#ocrStage'), img: $('#ocrImg'),
+    boxes: $('#ocrBoxes'), beam: $('#ocrBeam'), bar: $('#ocrBar'), status: $('#ocrStatus'),
+    conf: $('#ocrConf'), text: $('#ocrText'), again: $('#ocrAgain'), busy: false, worker: null
+  };
+  const loadScript = src => new Promise((ok, fail) => {
+    if (window.Tesseract) return ok();
+    const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = fail; document.head.appendChild(s);
+  });
+  const setProgress = (p, msg) => { ocr.bar.style.width = Math.round(p * 100) + '%'; if (msg) ocr.status.textContent = msg; };
+  const statusText = { 'loading tesseract core': 'Loading the OCR engine…', 'initializing tesseract': 'Starting the OCR engine…', 'loading language traineddata': 'Loading the English model…', 'initializing api': 'Getting ready…', 'recognizing text': 'Reading the bill…' };
+
+  // shrink big phone photos so OCR stays quick; returns a data URL plus its size
+  const prepareImage = src => new Promise((ok, fail) => {
+    const im = new Image();
+    im.onload = () => {
+      const k = Math.min(1, 1800 / Math.max(im.naturalWidth, im.naturalHeight));
+      const c = document.createElement('canvas');
+      c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
+      const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0, c.width, c.height);
+      ok({ url: c.toDataURL('image/png'), w: c.width, h: c.height });
+    };
+    im.onerror = fail;
+    im.src = src;
+  });
+
+  // pull the fields out of the recognised text
+  const amountsIn = line => (line.match(/\d[\d,]*(?:\.\d{1,2})?(?!\s*%)/g) || [])
+    .map(s => s.replace(/,/g, '')).filter(s => /\d/.test(s) && !/^\d{1,2}$/.test(s)).map(Number).filter(n => isFinite(n));
+  const money = n => '₹ ' + n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const parseBill = raw => {
+    const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+    const up = raw.toUpperCase();
+    const out = {};
+    // the business name is usually the first real line; drop document titles printed beside it
+    out.vendor = lines.slice(0, 6)
+      .map(l => l.replace(/\b(?:tax\s+)?invoice\b|\bbill\s+of\s+supply\b|\bcash\s+memo\b|\bestimate\b|\b(?:original|duplicate)(?:\s+copy)?\b/gi, '').replace(/[‘’"|]/g, '').replace(/\s{2,}/g, ' ').trim())
+      .find(l => /[a-z]{3}/i.test(l) && l.length >= 3 && l.length <= 60 && !/gstin|date|sample|phone|mob|email|@|bill to|invoice no|www\.|\d{6}/i.test(l)) || null;
+    const inv = raw.match(/(?:invoice|inv|bill)\s*(?:no|number|#)\.?\s*[:\-]?\s*([A-Z0-9][A-Z0-9\/\-]{2,})/i);
+    out.invoice = inv ? inv[1] : null;
+    const dateLine = lines.find(l => /date/i.test(l)) || '';
+    const dRe = /\b(\d{1,2}[\/\-.]\d{1,2}[\/\-.](?:\d{4}|\d{2}))\b|\b(\d{1,2}[\s\-](?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*[\s\-,]+\d{2,4})\b/i;
+    const dm = dateLine.match(dRe) || raw.match(dRe);
+    out.date = dm ? (dm[1] || dm[2]) : null;
+    const g = up.match(/\b\d{2}[A-Z]{5}\d{4}[A-Z][A-Z\d]Z[A-Z\d]\b/);
+    out.gstin = g ? g[0] : null;
+    let tax = 0;
+    const taxTotal = lines.find(l => /total\s*(gst|tax)/i.test(l));
+    if (taxTotal) tax = amountsIn(taxTotal).pop() || 0;
+    else lines.filter(l => /\b[csi]?gst\b|\bvat\b/i.test(l) && !/gstin/i.test(l)).forEach(l => { const a = amountsIn(l).pop(); if (a) tax += a; });
+    out.tax = tax ? money(tax) : null;
+    const pick = re => [...lines].reverse().find(l => re.test(l));
+    const totLine = pick(/grand\s*total|total\s*amount|amount\s*payable|net\s*(?:amount|payable)|invoice\s*total/i) || pick(/\btotal\b/i);
+    const tot = totLine && !/sub\s*total/i.test(totLine) ? amountsIn(totLine).pop() : null;
+    out.total = tot ? money(tot) : null;
+    return out;
+  };
+
+  const resetFields = () => document.querySelectorAll('#ocrFields > div').forEach(d => { d.className = ''; d.querySelector('dd').textContent = '—'; });
+  const showFields = async f => {
+    for (const d of document.querySelectorAll('#ocrFields > div')) {
+      await wait(reduce ? 0 : 180);
+      const v = f[d.dataset.f];
+      d.className = v ? 'got' : 'miss';
+      d.querySelector('dd').textContent = v || 'Not found';
+    }
+  };
+  const drawBoxes = (words, w, h, f) => {
+    const wanted = new Set(Object.values(f).filter(Boolean).join(' ').replace(/₹/g, '').split(/\s+/).map(t => t.replace(/[^\w\/\-.,]/g, '').toLowerCase()).filter(t => t.length > 1));
+    ocr.boxes.innerHTML = words.filter(wd => wd.confidence > 40 && wd.text.trim()).map((wd, i) => {
+      const b = wd.bbox, key = wd.text.replace(/[^\w\/\-.,]/g, '').toLowerCase();
+      return `<b class="${wanted.has(key) ? 'hit' : ''}" style="left:${b.x0 / w * 100}%;top:${b.y0 / h * 100}%;width:${(b.x1 - b.x0) / w * 100}%;height:${(b.y1 - b.y0) / h * 100}%;animation-delay:${Math.min(i * 6, 900)}ms"></b>`;
+    }).join('');
+  };
+
+  const runOcr = async (src, label) => {
+    if (ocr.busy) return;
+    ocr.busy = true;
+    resetFields(); ocr.boxes.innerHTML = ''; ocr.text.textContent = ''; ocr.conf.textContent = ''; ocr.again.hidden = true;
+    try {
+      setProgress(.03, 'Preparing the image…');
+      const im = await prepareImage(src);
+      ocr.img.src = im.url; ocr.empty.hidden = true; ocr.stage.hidden = false; ocr.beam.classList.add('on');
+      setProgress(.08, 'Loading the OCR engine…');
+      await loadScript(TESS_SRC);
+      if (!ocr.worker) {
+        ocr.worker = await Tesseract.createWorker('eng', 1, {
+          logger: m => { if (m.progress != null) setProgress(m.status === 'recognizing text' ? .35 + m.progress * .65 : .08 + m.progress * .27, statusText[m.status] || 'Working…'); }
+        });
+      }
+      const { data } = await ocr.worker.recognize(im.url);
+      const fields = parseBill(data.text);
+      ocr.beam.classList.remove('on');
+      drawBoxes(data.words || [], im.w, im.h, fields);
+      ocr.text.textContent = data.text.trim();
+      ocr.conf.textContent = `${Math.round(data.confidence)}% confidence`;
+      const found = Object.values(fields).filter(Boolean).length;
+      setProgress(1, `Done. Found ${found} of 6 fields${label ? ' in the ' + label : ''}.`);
+      await showFields(fields);
+      track('ocr-demo-run', `OCR demo: ${found}/6 fields (${label || 'own image'})`);
+    } catch (err) {
+      console.warn('OCR failed:', err);
+      ocr.beam.classList.remove('on');
+      setProgress(0, 'Sorry, the OCR engine could not load or read this image. Please try again, or try the sample bill.');
+    } finally {
+      ocr.busy = false; ocr.again.hidden = false;
+    }
+  };
+
+  $('#ocrPick').onclick = () => ocr.file.click();
+  $('#ocrSample').onclick = () => runOcr('demo/sample-bill.png', 'sample bill');
+  ocr.again.onclick = () => { ocr.stage.hidden = true; ocr.empty.hidden = false; ocr.again.hidden = true; resetFields(); setProgress(0, 'Waiting for a bill.'); ocr.text.textContent = ''; ocr.conf.textContent = ''; };
+  const takeFile = f => {
+    if (!f || !f.type.startsWith('image/')) return setProgress(0, 'Please choose an image file (PNG or JPG).');
+    if (f.size > 15 * 1024 * 1024) return setProgress(0, 'That image is over 15 MB. Please try a smaller one.');
+    const url = URL.createObjectURL(f);
+    runOcr(url).finally(() => setTimeout(() => URL.revokeObjectURL(url), 2000));
+  };
+  ocr.file.onchange = () => { takeFile(ocr.file.files[0]); ocr.file.value = ''; };
+  ['dragenter', 'dragover'].forEach(ev => ocr.drop.addEventListener(ev, e => { e.preventDefault(); ocr.drop.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach(ev => ocr.drop.addEventListener(ev, e => { e.preventDefault(); ocr.drop.classList.remove('over'); }));
+  ocr.drop.addEventListener('drop', e => takeFile(e.dataTransfer.files[0]));
 
   // GitHub: live stats and the latest repositories (public API, no key needed)
   const GH_USER = 'anandaparna126';
