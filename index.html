@@ -8,7 +8,36 @@
   <meta property="og:title" content="Aparna Anand | AI & Backend Engineer">
   <meta property="og:description" content="Backends businesses run on, and the AI that makes them smarter.">
   <meta property="og:url" content="https://aparnaaanand.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Aparna Anand">
+  <meta property="og:image" content="https://aparnaaanand.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Aparna Anand, AI and backend engineer">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aparna Anand | AI & Backend Engineer">
+  <meta name="twitter:description" content="Backends businesses run on, and the AI that makes them smarter.">
+  <meta name="twitter:image" content="https://aparnaaanand.com/og-image.png">
+  <meta name="theme-color" content="#110c13">
+  <meta name="keywords" content="Aparna Anand, AI engineer, backend engineer, Django developer, RAG, LangChain, AI agents, Bhopal, MANIT">
   <link rel="canonical" href="https://aparnaaanand.com/">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Aparna Anand",
+    "url": "https://aparnaaanand.com/",
+    "jobTitle": "AI and Backend Engineer",
+    "worksFor": { "@type": "Organization", "name": "Virtuon AI" },
+    "alumniOf": [
+      { "@type": "CollegeOrUniversity", "name": "Maulana Azad National Institute of Technology, Bhopal" },
+      { "@type": "CollegeOrUniversity", "name": "SAGE University, Bhopal" }
+    ],
+    "address": { "@type": "PostalAddress", "addressLocality": "Bhopal", "addressCountry": "IN" },
+    "knowsAbout": ["Django", "Django REST Framework", "LangChain", "Retrieval-augmented generation", "AI agents", "PostgreSQL", "OCR"],
+    "sameAs": ["https://www.linkedin.com/in/aparna-anand-067697227/", "https://github.com/anandaparna126"]
+  }
+  </script>
   <link rel="icon" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,7 +77,11 @@
     @keyframes shimmer { to { background-position: 200% center; } }
     section { padding: 120px 0; position: relative; }
     .label { font: 500 12.5px "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--rose); display: inline-flex; gap: 10px; align-items: center; }
-    .label::before { content: ""; width: 28px; height: 1px; background: currentColor; }
+    .label::before { content: ""; width: 12px; height: 12px; background: currentColor; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: twinkle 2.6s ease-in-out infinite; }
+    @keyframes twinkle { 50% { transform: scale(.55) rotate(45deg); opacity: .5; } }
+    h2 { position: relative; }
+    .twinkles { position: absolute; inset: 0; pointer-events: none; }
+    .twinkles i { position: absolute; width: var(--s, 10px); height: var(--s, 10px); background: var(--gold); clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); animation: twinkle 3s ease-in-out infinite; opacity: .85; }
     h2 { font-family: "Instrument Serif", serif; font-weight: 400; font-size: clamp(38px, 5.6vw, 68px); line-height: 1.02; letter-spacing: -.01em; margin: 16px 0 22px; }
     h2 em { font-style: italic; }
     .sub { color: var(--muted); font-size: 18px; max-width: 620px; }
@@ -313,6 +346,54 @@
     .fc-legend i { display: inline-block; width: 16px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
     .l-hist { background: var(--ink); } .l-fc { background: var(--rose); } .l-band { background: color-mix(in srgb, var(--lav) 45%, transparent); height: 10px !important; }
 
+    /* case study */
+    .cs-facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 40px 0 34px; }
+    .cs-facts div { padding: 22px; border-radius: 22px; border: 1px solid var(--line); background: var(--card); }
+    .cs-facts b { display: block; font-family: "Instrument Serif", serif; font-weight: 400; font-size: 48px; line-height: 1; }
+    .cs-facts span { color: var(--muted); font-size: 14px; }
+    .arch { display: grid; grid-template-columns: 1fr 70px 1.15fr 70px 1fr; align-items: center; padding: 30px; border-radius: 30px; border: 1px solid var(--line); background: var(--card); margin-bottom: 34px; }
+    .arch-col { display: grid; gap: 10px; }
+    .arch-h { font: 500 12px "JetBrains Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--rose); margin-bottom: 4px; }
+    .arch-box { padding: 11px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); font-size: 14.5px; }
+    .arch-core { padding: 18px; border-radius: 22px; background: color-mix(in srgb, var(--rose) 10%, transparent); border: 1px solid color-mix(in srgb, var(--rose) 35%, var(--line)); }
+    .arch-core .arch-box { background: var(--card-solid); }
+    .arch-box.db { font-family: "JetBrains Mono", monospace; font-size: 13.5px; border-color: color-mix(in srgb, var(--lav) 50%, var(--line)); }
+    .arch-link { position: relative; height: 2px; margin: 0 8px; background: var(--line); overflow: hidden; }
+    .arch-link i { position: absolute; top: -2px; width: 34px; height: 6px; border-radius: 3px; background: var(--grad); animation: travel 1.8s linear infinite; }
+    .arch-link:nth-child(4) i { animation-delay: -.9s; }
+    @keyframes travel { from { left: -40px; } to { left: 100%; } }
+    .cs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .cs-card { position: relative; padding: 28px; border-radius: 26px; border: 1px solid var(--line); background: var(--card); overflow: hidden; }
+    .cs-card::after { content: ""; position: absolute; right: -50px; top: -50px; width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--rose) 22%, transparent), transparent 70%); }
+    .cs-n { font: 13px "JetBrains Mono", monospace; color: var(--rose); }
+    .cs-card h3 { font-family: "Instrument Serif", serif; font-weight: 400; font-size: 27px; line-height: 1.15; margin: 8px 0 14px; }
+    .cs-p { color: var(--muted); font-size: 15px; margin-bottom: 10px; }
+    .cs-p b { color: var(--ink); font-weight: 600; }
+
+    /* github */
+    .gh-top { display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 14px; align-items: stretch; margin: 40px 0 18px; }
+    .gh-stat { padding: 20px 22px; border-radius: 22px; border: 1px solid var(--line); background: var(--card); }
+    .gh-stat b { display: block; font-family: "Instrument Serif", serif; font-weight: 400; font-size: 38px; line-height: 1.05; }
+    .gh-stat span { color: var(--muted); font-size: 13.5px; }
+    .gh-btn { align-self: center; }
+    .gh-cal { padding: 22px; border-radius: 22px; border: 1px solid var(--line); background: var(--card); margin-bottom: 18px; overflow-x: auto; }
+    .gh-cal img { min-width: 640px; width: 100%; }
+    :root:not([data-theme="light"]) .gh-cal img { filter: invert(1) hue-rotate(180deg) brightness(1.1); }
+    .gh-repos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .gh-repo { display: flex; flex-direction: column; gap: 8px; padding: 20px; border-radius: 20px; border: 1px solid var(--line); background: var(--card); text-decoration: none; transition: transform .3s, border-color .3s; }
+    .gh-repo:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--rose) 40%, var(--line)); }
+    .gh-repo strong { font: 500 15px "JetBrains Mono", monospace; word-break: break-word; }
+    .gh-repo p { color: var(--muted); font-size: 14px; flex: 1; }
+    .gh-meta { display: flex; gap: 14px; font-size: 13px; color: var(--muted); align-items: center; }
+    .gh-meta i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: -1px; }
+    .gh-fallback { color: var(--muted); }
+
+    /* now */
+    .now-wrap { display: grid; grid-template-columns: .8fr 1.2fr; gap: 50px; align-items: start; }
+    .now-list { list-style: none; display: grid; gap: 12px; }
+    .now-list li { display: grid; grid-template-columns: 130px 1fr; gap: 16px; padding: 22px 24px; border-radius: 22px; border: 1px solid var(--line); background: var(--card); font-size: 16.5px; }
+    .now-k { font: 500 12px "JetBrains Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--rose); padding-top: 4px; }
+
     /* contact: form + booking */
     .talk { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 10px 0 60px; text-align: left; }
     .talk-card { padding: clamp(24px, 3.4vw, 40px); border-radius: 30px; border: 1px solid var(--line); background: var(--card-solid); display: flex; flex-direction: column; }
@@ -368,6 +449,16 @@
       .nav-links.open { display: flex; }
       .burger { display: grid; }
       .hero .wrap, .about, .tests, .proj, .exp, .edu, .talk { grid-template-columns: 1fr; }
+      .cs-facts { grid-template-columns: 1fr 1fr; }
+      .gh-top { grid-template-columns: 1fr 1fr 1fr; }
+      .gh-btn { grid-column: 1 / -1; justify-self: start; }
+      .gh-repos { grid-template-columns: 1fr 1fr; }
+      .now-wrap { grid-template-columns: 1fr; gap: 10px; }
+      .cs-grid { grid-template-columns: 1fr 1fr; }
+      .arch { grid-template-columns: 1fr; gap: 6px; padding: 20px; }
+      .arch-link { width: 2px; height: 40px; margin: 6px auto; }
+      .arch-link i { width: 6px; height: 18px; left: -2px !important; animation-name: travelDown; }
+      @keyframes travelDown { from { top: -20px; } to { top: 100%; } }
       .live-wrap { width: min(440px, 100%); }
       .tag.t1 { left: -2%; top: -18px; } .tag.t2 { right: -2%; bottom: -22px; }
       .api { position: static; }
@@ -381,7 +472,10 @@
     }
     @media (max-width: 600px) {
       .nav-right .btn { display: none; }
-      .grid, .certs { grid-template-columns: 1fr; }
+      .grid, .certs, .cs-grid, .gh-repos { grid-template-columns: 1fr; }
+      .gh-top { grid-template-columns: 1fr 1fr; }
+      .now-list li { grid-template-columns: 1fr; gap: 4px; }
+      .cs-facts b { font-size: 38px; }
       .cert.wide { grid-column: auto; }
       .counters { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
       .counter { padding: 14px; } .counter b { font-size: 34px; }
@@ -608,6 +702,87 @@
     </div>
   </section>
 
+  <section id="case-study">
+    <div class="wrap">
+      <span class="label rv">Case study</span>
+      <h2 class="rv">Inside the <em class="grad-text">ReBAT ERP.</em></h2>
+      <p class="sub rv">A battery recycling company runs its people, money and materials on one Django backend that I built. Here is how it fits together, and the problems it had to solve.</p>
+
+      <div class="cs-facts rv">
+        <div><b data-count="420">0</b><span>data models</span></div>
+        <div><b data-count="600" data-suffix="+">0</b><span>REST APIs</span></div>
+        <div><b data-count="97">0</b><span>automated tests</span></div>
+        <div><b data-count="340" data-suffix="+">0</b><span>commits</span></div>
+      </div>
+
+      <div class="arch rv" aria-label="Architecture: users call the Django REST API, which stores data in PostgreSQL and syncs with Tally, eSSL biometric devices, Google and email">
+        <div class="arch-col">
+          <span class="arch-h">Who uses it</span>
+          <div class="arch-box">HR and payroll team</div>
+          <div class="arch-box">Purchase and stores</div>
+          <div class="arch-box">Managers approving requests</div>
+          <div class="arch-box">Employees, on web and mobile</div>
+        </div>
+        <div class="arch-link" aria-hidden="true"><i></i></div>
+        <div class="arch-col arch-core">
+          <span class="arch-h">Django REST API</span>
+          <div class="arch-box">Sign-in and role-based permissions</div>
+          <div class="arch-box">Configurable approval chains</div>
+          <div class="arch-box">Payroll engine</div>
+          <div class="arch-box">Indent → PO → GRN → QC → payment</div>
+          <div class="arch-box">Audit trail on every change</div>
+        </div>
+        <div class="arch-link" aria-hidden="true"><i></i></div>
+        <div class="arch-col">
+          <span class="arch-h">Data and integrations</span>
+          <div class="arch-box db">PostgreSQL</div>
+          <div class="arch-box">Tally accounting</div>
+          <div class="arch-box">eSSL biometric devices</div>
+          <div class="arch-box">Google sign-in and email</div>
+        </div>
+      </div>
+
+      <div class="cs-grid">
+        <article class="cs-card rv">
+          <span class="cs-n">01</span>
+          <h3>Payroll that HR can trust</h3>
+          <p class="cs-p"><b>The problem.</b> Salaries depend on attendance, leave, shifts and loss-of-pay rules, and those rules change. A wrong slip costs real money and trust.</p>
+          <p class="cs-p"><b>What I built.</b> A payroll engine with configurable loss-of-pay rules, pay cycle periods, a whole-rupee day rate and statutory details on the salary sheet, plus a Testing Mode run so HR can check every salary before the real one.</p>
+        </article>
+        <article class="cs-card rv d1">
+          <span class="cs-n">02</span>
+          <h3>Accounts without typing twice</h3>
+          <p class="cs-p"><b>The problem.</b> Purchase and payroll entries had to be keyed into Tally by hand after they were already in the ERP.</p>
+          <p class="cs-p"><b>What I built.</b> A Tally sync for purchase orders, goods receipts, payments and payroll, so accounts stay in step with operations.</p>
+        </article>
+        <article class="cs-card rv d2">
+          <span class="cs-n">03</span>
+          <h3>Attendance straight from the device</h3>
+          <p class="cs-p"><b>The problem.</b> Attendance lived on biometric machines at the plant, away from payroll.</p>
+          <p class="cs-p"><b>What I built.</b> An eSSL sync that pulls punches into shifts and attendance, which payroll then reads directly.</p>
+        </article>
+        <article class="cs-card rv">
+          <span class="cs-n">04</span>
+          <h3>Rules that change without a developer</h3>
+          <p class="cs-p"><b>The problem.</b> Who approves what changes often, and hard-coded approvers break the day someone moves roles.</p>
+          <p class="cs-p"><b>What I built.</b> Approval chains and settings that admins edit themselves, with role-based permissions on every screen and API.</p>
+        </article>
+        <article class="cs-card rv d1">
+          <span class="cs-n">05</span>
+          <h3>Bringing the old data across</h3>
+          <p class="cs-p"><b>The problem.</b> Years of vendors and items sat in the previous procurement system, in messy formats.</p>
+          <p class="cs-p"><b>What I built.</b> Re-runnable import commands for vendors and the item master that clean the data as they load it, so imports can be repeated safely.</p>
+        </article>
+        <article class="cs-card rv d2">
+          <span class="cs-n">06</span>
+          <h3>Changing a live system safely</h3>
+          <p class="cs-p"><b>The problem.</b> People use the ERP every day, so a broken release stops real work.</p>
+          <p class="cs-p"><b>What I built.</b> 97 automated tests across payments, quality checks, stock batches and vendor credit, self-test scripts for HR flows, and a full database backup before any risky change.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <section id="tests">
     <div class="wrap tests">
       <div>
@@ -619,6 +794,39 @@
         <div class="bar"><i></i><i></i><i></i><span>~/aparna — python manage.py test</span></div>
         <div class="out" id="testOut"><span class="dim">$</span> <span class="caret"></span></div>
       </div>
+    </div>
+  </section>
+
+  <section id="github">
+    <div class="wrap">
+      <span class="label rv">Building in public</span>
+      <h2 class="rv">Fresh from <em class="grad-text">my GitHub.</em></h2>
+      <p class="sub rv">Pulled live from GitHub each time this page loads.</p>
+      <div class="gh-top rv">
+        <div class="gh-stat"><b id="ghRepos">–</b><span>public repositories</span></div>
+        <div class="gh-stat"><b id="ghSince">–</b><span>on GitHub since</span></div>
+        <div class="gh-stat"><b id="ghLast">–</b><span>last push</span></div>
+        <a class="btn magnetic gh-btn" href="https://github.com/anandaparna126" target="_blank" rel="noopener" data-goatcounter-click="github-click" data-goatcounter-title="GitHub opened (activity)">View profile <span class="arr">→</span></a>
+      </div>
+      <div class="gh-cal rv">
+        <img src="https://ghchart.rshah.org/ec9db6/anandaparna126" alt="Aparna's GitHub contribution calendar" loading="lazy" onerror="this.closest('.gh-cal').remove()">
+      </div>
+      <div class="gh-repos" id="ghRepoList"></div>
+    </div>
+  </section>
+
+  <section id="now">
+    <div class="wrap now-wrap">
+      <div>
+        <span class="label rv">Now</span>
+        <h2 class="rv">What I'm <em class="grad-text">up to.</em></h2>
+        <p class="sub rv">Updated November 2026.</p>
+      </div>
+      <ul class="now-list">
+        <li class="rv"><span class="now-k">Building</span><span>New payroll and stock features for the ReBAT ERP at Virtuon AI.</span></li>
+        <li class="rv d1"><span class="now-k">Studying</span><span>M.Tech in Artificial Intelligence at MANIT Bhopal.</span></li>
+        <li class="rv d2"><span class="now-k">Looking for</span><span>AI engineer and backend roles where I can own systems end to end.</span></li>
+      </ul>
     </div>
   </section>
 
@@ -763,39 +971,76 @@
   $('#burger').onclick = () => links.classList.toggle('open');
   links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
 
-  // living network background
+  // starry sky background: twinkling stars, a few four-point sparkles, the odd shooting star
   const cv = $('#net'), cx = cv.getContext('2d');
-  let W, H, pts = [], mouse = { x: -999, y: -999 };
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  let W, H, stars = [], sparkles = [], meteors = [], mouse = { x: -999, y: -999 };
+  const tints = ['255,255,255', '255,255,255', '255,255,255', '246,206,220', '242,214,180', '205,192,246'];
   const resize = () => {
-    W = cv.width = innerWidth * devicePixelRatio; H = cv.height = innerHeight * devicePixelRatio;
+    W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr;
     cv.style.width = innerWidth + 'px'; cv.style.height = innerHeight + 'px';
-    const n = Math.min(90, Math.round(innerWidth * innerHeight / 16000));
-    pts = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .35 * devicePixelRatio, vy: (Math.random() - .5) * .35 * devicePixelRatio }));
+    const n = Math.min(420, Math.round(innerWidth * innerHeight / 2600));
+    stars = Array.from({ length: n }, () => ({
+      x: Math.random() * W, y: Math.random() * H, r: (Math.random() ** 2 * 1.2 + .35) * dpr,
+      a: .25 + Math.random() * .65, sp: .4 + Math.random() * 1.6, ph: Math.random() * 7,
+      z: .15 + Math.random() * .85, c: tints[Math.floor(Math.random() * tints.length)]
+    }));
+    sparkles = Array.from({ length: Math.max(6, Math.round(n / 34)) }, () => ({
+      x: Math.random() * W, y: Math.random() * H, s: (4 + Math.random() * 7) * dpr,
+      sp: .5 + Math.random(), ph: Math.random() * 7, z: .3 + Math.random() * .7, c: tints[3 + Math.floor(Math.random() * 3)]
+    }));
   };
   resize(); addEventListener('resize', resize);
-  let rgb = '';
-  const readNode = () => rgb = getComputedStyle(root).getPropertyValue('--node').trim();
-  readNode();
-  new MutationObserver(readNode).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
-  const draw = () => {
-    const D = 130 * devicePixelRatio;
-    cx.clearRect(0, 0, W, H);
-    for (const p of pts) {
-      if (!reduce) { p.x += p.vx; p.y += p.vy; }
-      if (p.x < 0 || p.x > W) p.vx *= -1;
-      if (p.y < 0 || p.y > H) p.vy *= -1;
-      const mx = mouse.x * devicePixelRatio, my = mouse.y * devicePixelRatio, md = Math.hypot(p.x - mx, p.y - my);
-      if (md < D * 1.4) { p.x += (p.x - mx) * .012; p.y += (p.y - my) * .012; }
-      cx.fillStyle = `rgba(${rgb},.55)`;
-      cx.beginPath(); cx.arc(p.x, p.y, 1.6 * devicePixelRatio, 0, 7); cx.fill();
-    }
-    for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
-      const a = pts[i], b = pts[j], d = Math.hypot(a.x - b.x, a.y - b.y);
-      if (d < D) { cx.strokeStyle = `rgba(${rgb},${(1 - d / D) * .22})`; cx.lineWidth = devicePixelRatio * .8; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke(); }
-    }
+  let light = false, inkRgb = '';
+  const readTheme = () => { light = root.dataset.theme === 'light'; inkRgb = getComputedStyle(root).getPropertyValue('--node').trim(); };
+  readTheme();
+  new MutationObserver(readTheme).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+  const sparkle = (x, y, s, alpha, col) => {
+    if (!isFinite(x) || !isFinite(y) || !isFinite(s) || s <= 0) return;
+    cx.fillStyle = `rgba(${col},${alpha})`;
+    cx.beginPath();
+    cx.moveTo(x, y - s); cx.quadraticCurveTo(x, y, x + s, y); cx.quadraticCurveTo(x, y, x, y + s);
+    cx.quadraticCurveTo(x, y, x - s, y); cx.quadraticCurveTo(x, y, x, y - s); cx.fill();
+    const g = cx.createRadialGradient(x, y, 0, x, y, s * 1.6);
+    g.addColorStop(0, `rgba(${col},${alpha * .35})`); g.addColorStop(1, `rgba(${col},0)`);
+    cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, s * 1.6, 0, 7); cx.fill();
+  };
+  let nextMeteor = performance.now() + 2500;
+  const draw = now => {
+    try { drawSky(now); } catch (e) { /* a bad frame must never stop the sky */ }
     if (!document.hidden) requestAnimationFrame(draw); else setTimeout(() => requestAnimationFrame(draw), 400);
   };
-  draw();
+  const drawSky = now => {
+    if (!W || !H || !isFinite(now)) return;
+    const t = now / 1000, sy = scrollY * dpr;
+    const mx = (mouse.x > 0 ? mouse.x / innerWidth - .5 : 0) * 18 * dpr, my = (mouse.y > 0 ? mouse.y / innerHeight - .5 : 0) * 18 * dpr;
+    cx.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      const tw = reduce ? 1 : .55 + .45 * Math.sin(t * s.sp + s.ph);
+      const x = s.x - mx * s.z, y = ((s.y - sy * .12 * s.z - my * s.z) % H + H) % H;
+      cx.fillStyle = `rgba(${light ? inkRgb : s.c},${s.a * tw * (light ? .45 : 1)})`;
+      cx.beginPath(); cx.arc(x, y, s.r, 0, 7); cx.fill();
+    }
+    for (const p of sparkles) {
+      const tw = reduce ? .8 : Math.max(0, Math.sin(t * p.sp + p.ph));
+      const x = p.x - mx * p.z, y = ((p.y - sy * .12 * p.z - my * p.z) % H + H) % H;
+      if (tw > .05) sparkle(x, y, p.s * (.55 + .45 * tw), (light ? .35 : .85) * tw, light ? inkRgb : p.c);
+    }
+    if (!reduce && now > nextMeteor) {
+      meteors.push({ x: Math.random() * W * .8 + W * .2, y: Math.random() * H * .35, v: (9 + Math.random() * 6) * dpr, life: 1 });
+      nextMeteor = now + 4000 + Math.random() * 6000;
+    }
+    meteors = meteors.filter(m => m.life > 0);
+    for (const m of meteors) {
+      m.x -= m.v * .9; m.y += m.v * .45; m.life -= .012;
+      const len = 120 * dpr, g = cx.createLinearGradient(m.x, m.y, m.x + len * .9, m.y - len * .45);
+      const col = light ? inkRgb : '255,236,244';
+      g.addColorStop(0, `rgba(${col},${.9 * m.life})`); g.addColorStop(1, `rgba(${col},0)`);
+      cx.strokeStyle = g; cx.lineWidth = 1.6 * dpr; cx.lineCap = 'round';
+      cx.beginPath(); cx.moveTo(m.x, m.y); cx.lineTo(m.x + len * .9, m.y - len * .45); cx.stroke();
+    }
+  };
+  requestAnimationFrame(draw);
 
   // cursor glow
   const glow = $('#glow');
@@ -1255,6 +1500,49 @@
     if (e.isIntersecting) { clearTimeout(convoTimer); playConvo(); } else clearTimeout(convoTimer);
   }), { threshold: .3 }).observe(convo);
   $('#term').addEventListener('click', runTests);
+
+  // GitHub: live stats and the latest repositories (public API, no key needed)
+  const GH_USER = 'anandaparna126';
+  const langColor = { Python: '#3572A5', HTML: '#e34c26', TypeScript: '#3178c6', JavaScript: '#f1e05a', 'Jupyter Notebook': '#DA5B0B', CSS: '#563d7c' };
+  const ago = iso => {
+    const d = (Date.now() - new Date(iso)) / 86400000;
+    if (d < 1) return 'today';
+    if (d < 2) return 'yesterday';
+    if (d < 30) return `${Math.floor(d)} days ago`;
+    if (d < 365) return `${Math.floor(d / 30)} month${d < 60 ? '' : 's'} ago`;
+    return `${Math.floor(d / 365)} year${d < 730 ? '' : 's'} ago`;
+  };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  Promise.all([
+    fetch(`https://api.github.com/users/${GH_USER}`).then(r => r.ok ? r.json() : Promise.reject(r.status)),
+    fetch(`https://api.github.com/users/${GH_USER}/repos?sort=pushed&per_page=20`).then(r => r.ok ? r.json() : Promise.reject(r.status))
+  ]).then(([user, repos]) => {
+    $('#ghRepos').textContent = user.public_repos;
+    $('#ghSince').textContent = new Date(user.created_at).getFullYear();
+    const list = repos.filter(r => !r.fork && r.name !== GH_USER && !r.name.endsWith('.github.io')).slice(0, 6);
+    if (repos[0]) $('#ghLast').textContent = ago(repos[0].pushed_at);
+    $('#ghRepoList').innerHTML = list.map((r, i) => `
+      <a class="gh-repo rv d${i % 3}" href="${esc(r.html_url)}" target="_blank" rel="noopener" data-goatcounter-click="repo-${esc(r.name)}">
+        <strong>${esc(r.name)}</strong>
+        <p>${r.description ? esc(r.description) : 'No description yet.'}</p>
+        <span class="gh-meta">${r.language ? `<span><i style="background:${langColor[r.language] || '#a8939f'}"></i>${esc(r.language)}</span>` : ''}<span>updated ${ago(r.pushed_at)}</span></span>
+      </a>`).join('');
+    $('#ghRepoList').querySelectorAll('.rv').forEach(el => io.observe(el));
+  }).catch(() => {
+    $('#ghRepoList').innerHTML = '<p class="gh-fallback">GitHub is not answering right now. <a href="https://github.com/anandaparna126" target="_blank" rel="noopener">See my profile on GitHub</a>.</p>';
+  });
+
+  // a few twinkling stars around every section heading
+  if (!reduce) document.querySelectorAll('section h2').forEach(h => {
+    const box = document.createElement('span');
+    box.className = 'twinkles'; box.setAttribute('aria-hidden', 'true');
+    for (let i = 0; i < 3; i++) {
+      const s = document.createElement('i');
+      s.style.cssText = `--s:${6 + Math.random() * 8}px;left:${Math.random() * 96}%;top:${-20 + Math.random() * 130}%;animation-delay:${-Math.random() * 3}s`;
+      box.appendChild(s);
+    }
+    h.appendChild(box);
+  });
 
   // live clock
   const clock = $('#clock');
