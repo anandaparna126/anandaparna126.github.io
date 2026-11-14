@@ -92,7 +92,22 @@
     .b1 { width: 520px; height: 520px; background: #6b2a4a; top: -140px; right: -120px; animation: drift1 22s ease-in-out infinite alternate; }
     .b2 { width: 460px; height: 460px; background: #3b2a6b; bottom: -160px; left: -140px; animation: drift2 26s ease-in-out infinite alternate; }
     .b3 { width: 320px; height: 320px; background: #7a4b2e; top: 45%; left: 45%; opacity: .25; animation: drift1 30s ease-in-out infinite alternate-reverse; }
-    :root[data-theme="light"] .blob { opacity: .28; }
+    :root[data-theme="light"] .blob { opacity: .22; }
+    /* sunrise sky (light theme only) */
+    .sky { position: fixed; inset: 0; z-index: -4; pointer-events: none; opacity: 0; transition: opacity 1s ease; overflow: hidden;
+      background: linear-gradient(180deg, #ffe4d6 0%, #fde1e8 26%, #f6e3f6 52%, #ece6fb 74%, #fbf7f4 100%); background-size: 100% 180%; animation: dawn 26s ease-in-out infinite alternate; }
+    :root[data-theme="light"] .sky { opacity: 1; }
+    @keyframes dawn { to { background-position: 0 100%; } }
+    .sun { position: absolute; top: -22vmax; right: -12vmax; width: 60vmax; height: 60vmax; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 223, 178, .95) 0%, rgba(255, 196, 170, .6) 18%, rgba(250, 172, 196, .28) 40%, rgba(220, 190, 250, .12) 58%, transparent 70%); animation: sunGlow 10s ease-in-out infinite alternate; }
+    .sun::after { content: ""; position: absolute; inset: -20%; border-radius: 50%;
+      background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, .22) 0deg 3deg, transparent 3deg 15deg);
+      -webkit-mask: radial-gradient(circle, transparent 12%, #000 22%, transparent 62%); mask: radial-gradient(circle, transparent 12%, #000 22%, transparent 62%);
+      animation: sunSpin 140s linear infinite; }
+    .sky::after { content: ""; position: absolute; left: -10%; right: -10%; bottom: -10%; height: 45%; background: radial-gradient(ellipse at 50% 100%, rgba(214, 196, 250, .45), transparent 70%); animation: haze 18s ease-in-out infinite alternate; }
+    @keyframes sunGlow { to { transform: scale(1.07); filter: saturate(1.15); } }
+    @keyframes sunSpin { to { transform: rotate(360deg); } }
+    @keyframes haze { to { transform: translateX(6%) scaleY(1.1); } }
     :root[data-theme="light"] .b1 { background: #f2b6c8; } :root[data-theme="light"] .b2 { background: #cfc2f5; } :root[data-theme="light"] .b3 { background: #f6d6b6; }
     @keyframes drift1 { to { transform: translate(-120px, 140px) scale(1.15); } }
     @keyframes drift2 { to { transform: translate(160px, -110px) scale(1.1); } }
@@ -529,6 +544,7 @@
   <script data-goatcounter="https://aparnaa.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
+  <div class="sky" aria-hidden="true"><i class="sun"></i></div>
   <canvas id="net" aria-hidden="true"></canvas>
   <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
   <div class="cursor-glow" id="glow"></div>
@@ -1062,11 +1078,13 @@
   $('#burger').onclick = () => links.classList.toggle('open');
   links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
 
-  // starry sky background: twinkling stars, a few four-point sparkles, the odd shooting star
+  // living sky. Dark theme: a starry night. Light theme: a sunrise with drifting bokeh light.
+  // Both carry an AI layer: some stars are "neurons" joined into a network, with signals firing along it.
   const cv = $('#net'), cx = cv.getContext('2d');
   const dpr = Math.min(devicePixelRatio || 1, 2);
-  let W, H, stars = [], sparkles = [], meteors = [], mouse = { x: -999, y: -999 };
+  let W, H, stars = [], sparkles = [], meteors = [], nodes = [], pulses = [], orbs = [], mouse = { x: -999, y: -999 };
   const tints = ['255,255,255', '255,255,255', '255,255,255', '246,206,220', '242,214,180', '205,192,246'];
+  const orbTints = ['255,183,197', '255,206,160', '206,190,250', '255,226,180', '250,170,200'];
   const resize = () => {
     W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr;
     cv.style.width = innerWidth + 'px'; cv.style.height = innerHeight + 'px';
@@ -1080,8 +1098,30 @@
       x: Math.random() * W, y: Math.random() * H, s: (4 + Math.random() * 7) * dpr,
       sp: .5 + Math.random(), ph: Math.random() * 7, z: .3 + Math.random() * .7, c: tints[3 + Math.floor(Math.random() * 3)]
     }));
+    const nn = Math.max(18, Math.min(64, Math.round(innerWidth * innerHeight / 24000)));
+    nodes = Array.from({ length: nn }, () => ({
+      x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .18 * dpr, vy: (Math.random() - .5) * .18 * dpr,
+      r: (1.3 + Math.random() * 1.3) * dpr, fire: 0, z: .3 + Math.random() * .5, px: 0, py: 0
+    }));
+    pulses = [];
+    orbs = Array.from({ length: Math.max(8, Math.round(innerWidth / 110)) }, () => ({
+      x: Math.random() * W, y: Math.random() * H, r: (28 + Math.random() * 90) * dpr, c: orbTints[Math.floor(Math.random() * orbTints.length)],
+      a: .16 + Math.random() * .22, vy: -(.08 + Math.random() * .22) * dpr, sw: Math.random() * 7, sp: .2 + Math.random() * .4
+    }));
   };
   resize(); addEventListener('resize', resize);
+  const LINK = () => 165 * dpr;
+  const neighbours = i => {
+    const a = nodes[i], out = [];
+    nodes.forEach((b, j) => { if (j !== i && Math.hypot(a.px - b.px, a.py - b.py) < LINK()) out.push(j); });
+    return out;
+  };
+  const firePulse = (from, avoid) => {
+    const nb = neighbours(from).filter(j => j !== avoid);
+    if (!nb.length) return;
+    pulses.push({ a: from, b: nb[Math.floor(Math.random() * nb.length)], t: 0, sp: .012 + Math.random() * .014, hops: 0 });
+  };
+  let nextPulse = 0;
   let light = false, inkRgb = '';
   const readTheme = () => { light = root.dataset.theme === 'light'; inkRgb = getComputedStyle(root).getPropertyValue('--node').trim(); };
   readTheme();
@@ -1106,16 +1146,87 @@
     const t = now / 1000, sy = scrollY * dpr;
     const mx = (mouse.x > 0 ? mouse.x / innerWidth - .5 : 0) * 18 * dpr, my = (mouse.y > 0 ? mouse.y / innerHeight - .5 : 0) * 18 * dpr;
     cx.clearRect(0, 0, W, H);
-    for (const s of stars) {
+
+    // sunrise bokeh: soft discs of light rising slowly
+    if (light) for (const o of orbs) {
+      if (!reduce) { o.y += o.vy; if (o.y < -o.r) { o.y = H + o.r; o.x = Math.random() * W; } }
+      const x = o.x + Math.sin(t * o.sp + o.sw) * 22 * dpr - mx * .6, y = o.y - my * .6;
+      const pulse = reduce ? 1 : .8 + .2 * Math.sin(t * o.sp * 2 + o.sw);
+      const g = cx.createRadialGradient(x, y, 0, x, y, o.r);
+      g.addColorStop(0, `rgba(${o.c},${o.a * pulse})`); g.addColorStop(.7, `rgba(${o.c},${o.a * .55 * pulse})`); g.addColorStop(1, `rgba(${o.c},0)`);
+      cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, o.r, 0, 7); cx.fill();
+      cx.strokeStyle = `rgba(255,255,255,${.35 * o.a * pulse})`; cx.lineWidth = 1.2 * dpr;
+      cx.beginPath(); cx.arc(x, y, o.r * .72, 0, 7); cx.stroke();
+    }
+
+    // stars (dark) or golden dust (light)
+    for (let i = 0; i < stars.length; i++) {
+      const s = stars[i];
+      if (light && i % 3) continue;
       const tw = reduce ? 1 : .55 + .45 * Math.sin(t * s.sp + s.ph);
       const x = s.x - mx * s.z, y = ((s.y - sy * .12 * s.z - my * s.z) % H + H) % H;
-      cx.fillStyle = `rgba(${light ? inkRgb : s.c},${s.a * tw * (light ? .45 : 1)})`;
-      cx.beginPath(); cx.arc(x, y, s.r, 0, 7); cx.fill();
+      cx.fillStyle = light ? `rgba(196,128,70,${s.a * tw * .55})` : `rgba(${s.c},${s.a * tw})`;
+      cx.beginPath(); cx.arc(x, y, s.r * (light ? 1.15 : 1), 0, 7); cx.fill();
     }
+
+    // AI layer: neurons, their links, and signals travelling between them
+    const linkCol = light ? '184,70,108' : '205,192,246', D = LINK();
+    for (const n of nodes) {
+      if (!reduce) { n.x += n.vx; n.y += n.vy; if (n.x < 0 || n.x > W) n.vx *= -1; if (n.y < 0 || n.y > H) n.vy *= -1; }
+      n.px = n.x - mx * n.z; n.py = ((n.y - sy * .08 * n.z - my * n.z) % H + H) % H;
+      n.fire *= .95;
+    }
+    cx.lineWidth = dpr;
+    for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+      const a = nodes[i], b = nodes[j], d = Math.hypot(a.px - b.px, a.py - b.py);
+      if (d < D) {
+        const k = (1 - d / D) * (light ? .22 : .26) + Math.max(a.fire, b.fire) * .25;
+        cx.strokeStyle = `rgba(${linkCol},${k})`; cx.beginPath(); cx.moveTo(a.px, a.py); cx.lineTo(b.px, b.py); cx.stroke();
+      }
+    }
+    // neurons reach towards the cursor
+    if (mouse.x > 0) {
+      const ux = mouse.x * dpr, uy = mouse.y * dpr;
+      for (const n of nodes) {
+        const d = Math.hypot(n.px - ux, n.py - uy);
+        if (d < D * 1.3) { cx.strokeStyle = `rgba(${linkCol},${(1 - d / (D * 1.3)) * (light ? .35 : .28)})`; cx.beginPath(); cx.moveTo(n.px, n.py); cx.lineTo(ux, uy); cx.stroke(); }
+      }
+    }
+    if (!reduce && now > nextPulse && pulses.length < 12) { firePulse(Math.floor(Math.random() * nodes.length), -1); nextPulse = now + 260 + Math.random() * 380; }
+    const sigCol = light ? '214,140,60' : '242,201,160';
+    pulses = pulses.filter(p => {
+      const a = nodes[p.a], b = nodes[p.b];
+      if (!a || !b) return false;
+      p.t += p.sp;
+      if (p.t >= 1) {
+        b.fire = 1;
+        if (p.hops < 5 && Math.random() < .75) { const nb = neighbours(p.b).filter(j => j !== p.a); if (nb.length) { pulses.push({ a: p.b, b: nb[Math.floor(Math.random() * nb.length)], t: 0, sp: p.sp, hops: p.hops + 1 }); } }
+        return false;
+      }
+      if (Math.hypot(a.px - b.px, a.py - b.py) > D * 1.2) return false;
+      const x = a.px + (b.px - a.px) * p.t, y = a.py + (b.py - a.py) * p.t;
+      const tx = a.px + (b.px - a.px) * Math.max(0, p.t - .25), ty = a.py + (b.py - a.py) * Math.max(0, p.t - .25);
+      const g = cx.createLinearGradient(tx, ty, x, y);
+      g.addColorStop(0, `rgba(${sigCol},0)`); g.addColorStop(1, `rgba(${sigCol},.95)`);
+      cx.strokeStyle = g; cx.lineWidth = 2 * dpr; cx.lineCap = 'round';
+      cx.beginPath(); cx.moveTo(tx, ty); cx.lineTo(x, y); cx.stroke();
+      cx.fillStyle = `rgba(${sigCol},1)`; cx.beginPath(); cx.arc(x, y, 2.2 * dpr, 0, 7); cx.fill();
+      return true;
+    });
+    for (const n of nodes) {
+      const glowR = n.r * (3 + n.fire * 5);
+      const g = cx.createRadialGradient(n.px, n.py, 0, n.px, n.py, glowR);
+      const c = light ? (n.fire > .3 ? '214,140,60' : '184,70,108') : (n.fire > .3 ? '242,201,160' : '236,157,182');
+      g.addColorStop(0, `rgba(${c},${(light ? .32 : .55) + n.fire * .45})`); g.addColorStop(1, `rgba(${c},0)`);
+      cx.fillStyle = g; cx.beginPath(); cx.arc(n.px, n.py, glowR, 0, 7); cx.fill();
+      cx.fillStyle = light ? `rgba(120,40,80,${.75 + n.fire * .25})` : `rgba(255,240,246,${.85 + n.fire * .15})`;
+      cx.beginPath(); cx.arc(n.px, n.py, n.r, 0, 7); cx.fill();
+    }
+
     for (const p of sparkles) {
       const tw = reduce ? .8 : Math.max(0, Math.sin(t * p.sp + p.ph));
       const x = p.x - mx * p.z, y = ((p.y - sy * .12 * p.z - my * p.z) % H + H) % H;
-      if (tw > .05) sparkle(x, y, p.s * (.55 + .45 * tw), (light ? .35 : .85) * tw, light ? inkRgb : p.c);
+      if (tw > .05) sparkle(x, y, p.s * (.55 + .45 * tw) * (light ? 1.15 : 1), (light ? .8 : .85) * tw, light ? '205,140,55' : p.c);
     }
     if (!reduce && now > nextMeteor) {
       meteors.push({ x: Math.random() * W * .8 + W * .2, y: Math.random() * H * .35, v: (9 + Math.random() * 6) * dpr, life: 1 });
@@ -1125,8 +1236,8 @@
     for (const m of meteors) {
       m.x -= m.v * .9; m.y += m.v * .45; m.life -= .012;
       const len = 120 * dpr, g = cx.createLinearGradient(m.x, m.y, m.x + len * .9, m.y - len * .45);
-      const col = light ? inkRgb : '255,236,244';
-      g.addColorStop(0, `rgba(${col},${.9 * m.life})`); g.addColorStop(1, `rgba(${col},0)`);
+      const col = light ? '232,130,160' : '255,236,244';
+      g.addColorStop(0, `rgba(${col},${(light ? .7 : .9) * m.life})`); g.addColorStop(1, `rgba(${col},0)`);
       cx.strokeStyle = g; cx.lineWidth = 1.6 * dpr; cx.lineCap = 'round';
       cx.beginPath(); cx.moveTo(m.x, m.y); cx.lineTo(m.x + len * .9, m.y - len * .45); cx.stroke();
     }
