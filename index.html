@@ -261,6 +261,10 @@
     .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
     .chips span { font: 12.5px "JetBrains Mono", monospace; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
     .proj-info a.link { color: var(--rose); font-weight: 600; text-decoration: none; }
+    .go-btn { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: color-mix(in srgb, var(--rose) 16%, transparent); border: 1px solid color-mix(in srgb, var(--rose) 45%, var(--line)); color: var(--ink); font: 600 14px "Manrope", sans-serif; text-decoration: none; transition: background .25s, transform .25s; }
+    .go-btn:hover { background: color-mix(in srgb, var(--rose) 30%, transparent); transform: translateY(-2px); }
+    .go-btn span { color: var(--rose); }
+    .go-btn small { font: 11px "JetBrains Mono", monospace; color: var(--muted); margin-left: 4px; }
     .proj-visual { position: relative; background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--rose) 22%, transparent), transparent 60%), radial-gradient(circle at 80% 80%, color-mix(in srgb, var(--lav) 22%, transparent), transparent 60%); display: grid; place-items: center; padding: 30px; overflow: hidden; }
     /* visual 1: live system diagram */
     .sys { width: 100%; max-width: 420px; }
@@ -456,6 +460,62 @@
     .cs-p { color: var(--muted); font-size: 15px; margin-bottom: 10px; }
     .cs-p b { color: var(--ink); font-weight: 600; }
 
+    /* AI agent */
+    .agent { display: grid; grid-template-columns: 320px 1fr; gap: 22px; margin-top: 44px; }
+    .agent-side { padding: 24px; border-radius: 28px; border: 1px solid var(--line); background: var(--card); align-self: start; }
+    .agent-card { display: grid; justify-items: center; gap: 6px; padding: 10px 0 18px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+    .agent-orb { position: relative; width: 74px; height: 74px; margin-bottom: 6px; }
+    .agent-orb i { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, var(--rose), var(--gold), var(--lav), var(--rose)); filter: blur(1px); animation: orb 6s linear infinite; }
+    .agent-orb i:nth-child(2) { inset: 8px; background: var(--bg); animation: none; }
+    .agent-orb i:nth-child(3) { inset: 22px; background: radial-gradient(circle at 35% 35%, #fff, var(--rose) 60%); filter: none; animation: breathe 2.6s ease-in-out infinite; }
+    .agent.thinking .agent-orb i:first-child { animation-duration: 1.2s; }
+    @keyframes orb { to { transform: rotate(360deg); } }
+    @keyframes breathe { 50% { transform: scale(.8); opacity: .8; } }
+    .agent-state { display: inline-flex; align-items: center; gap: 6px; font: 12px "JetBrains Mono", monospace; color: var(--muted); }
+    .agent-state b { width: 7px; height: 7px; border-radius: 50%; background: #6fd39b; }
+    .agent.thinking .agent-state b { background: var(--gold); animation: blink 1s infinite; }
+    .agent-side h4 { font: 500 12px "JetBrains Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--rose); margin: 4px 0 10px; }
+    .agent-sugs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .agent-sugs button { text-align: left; padding: 8px 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 500 13px "Manrope", sans-serif; cursor: pointer; transition: border-color .2s, background .2s; }
+    .agent-sugs button:hover { border-color: var(--rose); background: color-mix(in srgb, var(--rose) 10%, var(--bg)); }
+    .agent-tools { list-style: none; display: grid; gap: 8px; font-size: 13px; color: var(--muted); }
+    .agent-tools span { font: 11.5px "JetBrains Mono", monospace; color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, transparent); padding: 1px 6px; border-radius: 6px; margin-right: 6px; }
+    .chat { display: flex; flex-direction: column; border-radius: 28px; border: 1px solid var(--line); background: var(--card); overflow: hidden; min-height: 560px; }
+    .chat-log { flex: 1; overflow-y: auto; padding: 22px; display: flex; flex-direction: column; gap: 12px; max-height: 560px; scroll-behavior: smooth; }
+    .msg { max-width: 82%; animation: fadeUp .35s both; }
+    .msg p { padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.55; white-space: pre-wrap; }
+    .msg.bot p { background: var(--bg); border: 1px solid var(--line); border-bottom-left-radius: 6px; }
+    .msg.me { align-self: flex-end; }
+    .msg.me p { background: var(--rose); color: #fff; border-bottom-right-radius: 6px; }
+    :root[data-theme="light"] .msg.me p { color: #fff; }
+    :root:not([data-theme="light"]) .msg.me p { color: #2a1824; }
+    .msg .srcs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .msg .srcs span { font: 11px "JetBrains Mono", monospace; color: var(--muted); border: 1px dashed var(--line); padding: 2px 8px; border-radius: 999px; }
+    .msg .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .msg .acts a, .msg .acts button { padding: 8px 14px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--rose) 45%, var(--line)); background: color-mix(in srgb, var(--rose) 12%, transparent); color: var(--ink); font: 600 13px "Manrope", sans-serif; text-decoration: none; cursor: pointer; }
+    .msg .acts .primary { background: var(--rose); color: #fff; border-color: var(--rose); }
+    .msg .acts button[disabled] { opacity: .5; cursor: default; }
+    .trace { align-self: flex-start; display: grid; gap: 4px; font: 12px "JetBrains Mono", monospace; color: var(--muted); padding: 2px 4px; animation: fadeUp .3s both; }
+    .trace span::before { content: "↳ "; color: var(--gold); }
+    .trace span.run::after { content: "…"; animation: blink 1s infinite; }
+    .confirm { align-self: flex-start; width: min(420px, 100%); padding: 16px; border-radius: 18px; border: 1px solid color-mix(in srgb, var(--gold) 50%, var(--line)); background: color-mix(in srgb, var(--gold) 8%, var(--bg)); animation: fadeUp .35s both; }
+    .confirm h5 { font: 600 14px "Manrope", sans-serif; margin-bottom: 8px; }
+    .confirm dl { display: grid; grid-template-columns: 90px 1fr; gap: 4px 10px; font-size: 13.5px; margin-bottom: 12px; }
+    .confirm dt { color: var(--muted); }
+    .confirm dd { margin: 0; word-break: break-word; white-space: pre-wrap; }
+    .confirm .acts { display: flex; gap: 8px; }
+    .confirm button { padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: 600 13px "Manrope", sans-serif; cursor: pointer; }
+    .confirm button.ok { background: var(--rose); border-color: var(--rose); color: #fff; }
+    .confirm button[disabled] { opacity: .5; cursor: default; }
+    .typing { align-self: flex-start; display: inline-flex; gap: 5px; padding: 14px 16px; border-radius: 18px; background: var(--bg); border: 1px solid var(--line); }
+    .typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--rose); animation: bounce 1.2s infinite; }
+    .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce { 30% { transform: translateY(-6px); opacity: .6; } }
+    .chat-in { display: flex; gap: 10px; padding: 14px; border-top: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 60%, transparent); }
+    .chat-in input { flex: 1; min-width: 0; padding: 13px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 15px "Manrope", sans-serif; }
+    .chat-in input:focus { outline: none; border-color: var(--rose); box-shadow: 0 0 0 4px color-mix(in srgb, var(--rose) 18%, transparent); }
+    .chat-note { padding: 0 18px 14px; font-size: 12px; color: var(--muted); }
+
     /* OCR demo */
     .ocr { display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; margin-top: 44px; }
     .ocr-left, .ocr-right { padding: 22px; border-radius: 28px; border: 1px solid var(--line); background: var(--card); }
@@ -579,7 +639,10 @@
       .career-steps { display: none; }
       .chap-groups { grid-template-columns: 1fr; }
       .cs-facts { grid-template-columns: 1fr 1fr; }
-      .ocr { grid-template-columns: 1fr; }
+      .ocr, .agent { grid-template-columns: 1fr; }
+      .agent-tools { display: none; }
+      .chat { min-height: 480px; }
+      .msg { max-width: 92%; }
       .ocr-drop { min-height: 300px; }
       .gh-top { grid-template-columns: 1fr 1fr 1fr; }
       .gh-btn { grid-column: 1 / -1; justify-self: start; }
@@ -826,6 +889,7 @@
           <div class="proj-info">
             <span class="num">01 / ERP backend</span>
             <h3>ReBAT Management System</h3>
+            <a class="go-btn" href="https://workspace.virtuonai.com" target="_blank" rel="noopener" data-goatcounter-click="rebat-workspace" data-goatcounter-title="ReBAT workspace opened">Open the live workspace <span>↗</span><small>sign-in required</small></a>
             <p>A battery recycling company runs its HR, payroll, purchasing and stores on this backend every day. I designed the data models, wrote the APIs and built the payroll engine and integrations.</p>
             <p>HR can change payroll rules (loss of pay, pay cycles, statutory deductions) without a developer, and check salaries in a test run before anything is paid.</p>
             <div class="chips"><span>Django</span><span>DRF</span><span>PostgreSQL</span><span>Tally</span><span>eSSL</span></div>
@@ -871,9 +935,9 @@
           <div class="proj-info">
             <span class="num">03 / Healthcare AI</span>
             <h3>CurAyu, AI Health Assistant</h3>
+            <a class="go-btn" href="https://play.google.com/store/apps/details?id=com.virtuonai.curayu" target="_blank" rel="noopener" data-goatcounter-click="curayu-playstore" data-goatcounter-title="CurAyu Play Store opened"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M4 2.6c-.3.3-.4.7-.4 1.2v16.4c0 .5.1.9.4 1.2l9.2-9.4zm10.6 7.6L6.1 1.4 16.9 7.6zm3.6 2c.7.4.7 1.2 0 1.6l-2.6 1.5-2.6-2.7 2.6-2.7zM6.1 22.6l10.8-6.2-2.3-2.4z"/></svg>Get it on Google Play <span>↗</span></a>
             <p>I built the AI that reads medical reports and explains them in plain words, using a fine-tuned LLM pipeline. People can then ask follow-up questions about their own results.</p>
             <div class="chips"><span>LLMs</span><span>Fine-tuning</span><span>Gemini</span><span>Python</span></div>
-            <a class="link" href="https://play.google.com/store/apps/details?id=com.virtuonai.curayu" target="_blank" rel="noopener">See it on Google Play ↗</a>
           </div>
           <div class="proj-visual">
             <div class="scan">
@@ -1011,6 +1075,53 @@
           <p class="cs-p"><b>The problem.</b> People use the ERP every day, so a broken release stops real work.</p>
           <p class="cs-p"><b>What I built.</b> 97 automated tests across payments, quality checks, stock batches and vendor credit, self-test scripts for HR flows, and a full database backup before any risky change.</p>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="agent">
+    <div class="wrap">
+      <span class="label rv">Try it yourself</span>
+      <h2 class="rv">Talk to my <em class="grad-text">AI agent.</em></h2>
+      <p class="sub rv">Ask anything about my work, or ask it to do something: book a call with me, send me a message, open my resume, take you to a section. It finds answers in my profile (RAG) and uses tools to act, and you can watch each step it takes.</p>
+
+      <div class="agent rv">
+        <aside class="agent-side">
+          <div class="agent-card">
+            <div class="agent-orb" aria-hidden="true"><i></i><i></i><i></i></div>
+            <strong>Aparna's agent</strong>
+            <span class="agent-state" id="agState"><b></b>online</span>
+          </div>
+          <h4>Try asking</h4>
+          <div class="agent-sugs" id="agSugs">
+            <button type="button">Tell me about Aparna</button>
+            <button type="button">What has she built with RAG?</button>
+            <button type="button">Book a call with Aparna next Tuesday at 3 pm</button>
+            <button type="button">Send Aparna a message</button>
+            <button type="button">Is she open to new roles?</button>
+            <button type="button">Show me her projects</button>
+            <button type="button">Open her resume</button>
+            <button type="button">Switch to light mode</button>
+          </div>
+          <h4>What it can do</h4>
+          <ul class="agent-tools">
+            <li><span>search_profile</span>answers from my experience, projects and skills</li>
+            <li><span>check_slots</span> + <span>book_call</span>books a 30-minute call</li>
+            <li><span>send_message</span>emails me on your behalf</li>
+            <li><span>open_resume</span> <span>go_to</span> <span>set_theme</span> <span>try_ocr</span></li>
+          </ul>
+        </aside>
+
+        <div class="chat">
+          <div class="chat-log" id="agLog" aria-live="polite">
+            <div class="msg bot"><p>Hi! I'm Aparna's AI agent. Ask me about her work, or tell me what you'd like to do. For example, "book a call with her on Friday".</p></div>
+          </div>
+          <form class="chat-in" id="agForm" autocomplete="off">
+            <input id="agInput" type="text" maxlength="500" placeholder="Ask about Aparna, or tell me what to do…" aria-label="Message the agent">
+            <button type="submit" class="btn main" id="agSend" aria-label="Send">Send <span class="arr">→</span></button>
+          </form>
+          <p class="chat-note">Replies come from an AI model through Pollinations. Please don't share anything sensitive. Emails and bookings always wait for your confirmation.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -2005,6 +2116,409 @@
   ['dragleave', 'drop'].forEach(ev => ocr.drop.addEventListener(ev, e => { e.preventDefault(); ocr.drop.classList.remove('over'); }));
   ocr.drop.addEventListener('drop', e => takeFile(e.dataTransfer.files[0]));
 
+  // =====================================================================================
+  // AI agent: retrieval over my profile (RAG) + tools, planned by an LLM (Pollinations,
+  // OpenAI-compatible, no key) with a built-in rule-based planner when the model is unreachable.
+  // Side effects (email, booking) always stop at a confirmation card the visitor must press.
+  // =====================================================================================
+  const AGENT_LLM = 'https://text.pollinations.ai/openai';
+  const KB = [
+    { t: 'Summary', x: 'Aparna Anand is an AI and backend engineer in Bhopal, India. She is an AI Developer at Virtuon AI (since July 2024) and is studying for an M.Tech in Artificial Intelligence at MANIT Bhopal (2024 to 2026, current CGPA 8.5). She builds Django backends and production AI: RAG chatbots, agentic calling systems and OCR. She graduated in B.Tech CSE (AI) from SAGE University with a Silver Medal.' },
+    { t: 'Open to work', x: 'Aparna is open to AI engineer and backend engineer roles where she can own systems end to end, and to interesting projects. The best ways to reach her are this agent (it can send her a message or book a 30-minute call), the project form on this page, or email anandaparna1203@gmail.com.' },
+    { t: 'Experience: AI Developer at Virtuon AI', x: 'July 2024 to present, Bhopal, full time. She built the whole backend of the ReBAT ERP in Django and DRF (420 data models, 600+ REST APIs, 97 automated tests); a payroll engine with configurable loss-of-pay rules, pay cycles, statutory deductions and a test-run mode; integrations with Tally, eSSL biometric devices and Google sign-in; an agentic calling and WhatsApp system for SAGE Group; RAG chatbots with LangChain and FAISS; the AI behind CurAyu; and bill OCR with 85% field accuracy on 1,000+ images. She deploys on GCP and Docker with Weave tracing, Locust load tests and Grafana monitoring.' },
+    { t: 'Experience: Junior AI Developer intern at Virtuon AI', x: 'January to June 2024. She built and deployed a face-recognition attendance system for enterprise use, and cut image processing time by 50% with pipelines using Hugging Face, OpenCV, TensorFlow and Gemini 1.5 Flash.' },
+    { t: 'Experience: ML Engineer intern at iNeuron', x: 'August to September 2023 at iNeuron Intelligence. She built a deep learning model for thyroid disease detection with 98.94% accuracy and raised performance by 4% through tuning.' },
+    { t: 'Project: ReBAT ERP backend', x: 'A battery recycling company runs HR, payroll, recruitment, procurement (indent, PO, GRN, quality check, payment), stores and travel on the Django backend Aparna built: 420 data models, 600+ REST APIs, 97 automated tests, 340+ commits. Payroll rules are editable by HR, with a Testing Mode run before real payroll. It syncs purchase orders, GRNs, payments and payroll to Tally, pulls attendance from eSSL biometric devices, has configurable approval chains, role-based permissions and an audit trail. The live workspace is at https://workspace.virtuonai.com (sign-in required).' },
+    { t: 'Project: Agentic calling and WhatsApp system', x: 'Built for SAGE Group. AI agents hold real conversations over voice calls (VCall) and WhatsApp and use tool calling to look up and update records in the CRM and other internal apps. Tech: agentic AI, tool calling, Meta WhatsApp Cloud API, ElevenLabs voice.' },
+    { t: 'Project: RAG chatbots', x: 'Aparna builds retrieval-augmented generation (RAG) chatbots with LangChain and FAISS that answer questions from company documents and cite their sources, including an internal support bot. This agent itself uses retrieval over her profile.' },
+    { t: 'Project: CurAyu AI health assistant', x: 'Aparna built the AI behind CurAyu, which reads medical reports and explains them in plain words using a fine-tuned LLM pipeline, so people can ask follow-up questions about their own results. It is on Google Play: https://play.google.com/store/apps/details?id=com.virtuonai.curayu' },
+    { t: 'Project: Bill and invoice OCR', x: 'OCR for bills and invoices with Tesseract, OpenCV and Gemini; the Gemini and LangChain version reached 85% field accuracy on 1,000+ real images. A live in-browser demo is on this page (Read a bill in seconds).' },
+    { t: 'Project: Pics Picker', x: 'Groups event photos person-wise and finds every photo of someone from one reference picture, using face embeddings and clustering.' },
+    { t: 'Project: SARIMA price forecasting', x: 'Time-series models (SARIMA with regression and clustering) that forecast property prices and stock trends and feed a pricing model for business use.' },
+    { t: 'Project: AI battery pricing tool', x: 'A Django tool where Gemini acts as a commodity pricing analyst and returns a validated price for battery scrap.' },
+    { t: 'Project: Personalised AI agent', x: 'An agent with memory of user preferences, on an open-source LLM fine-tuned on domain data.' },
+    { t: 'Other projects', x: 'AI Assignment Solver (Gemini, Streamlit, https://ai-assignment-solver.streamlit.app/), thyroid disease detection (98.94% accuracy), and data science notebooks on her blog (room occupancy, diabetes prediction, crime forecasting).' },
+    { t: 'Skills', x: 'GenAI: LangChain, RAG, AI agents, tool calling, multi-agent workflows, fine-tuning, prompt engineering, Gemini (Vertex AI), Hugging Face, FAISS, N8n. Backend: Python, SQL, Django, Django REST Framework, REST APIs, PostgreSQL, MySQL, Firebase. ML: PyTorch, TensorFlow, Scikit-learn, Pandas, NumPy, SARIMA. Vision: OpenCV, Tesseract, face embeddings. Testing and DevOps: Django unit and API tests, Locust, Weave, Grafana, GCP, AWS, Docker, Git. Integrations: Tally ERP, eSSL biometric, Google Workspace APIs, WhatsApp Cloud API, ElevenLabs.' },
+    { t: 'Education', x: 'M.Tech in Artificial Intelligence at MANIT (Maulana Azad National Institute of Technology) Bhopal, 2024 to 2026, current CGPA 8.5. B.Tech in Computer Science (AI specialisation) at SAGE University Bhopal, 2020 to 2024, CGPA 9.24, University Silver Medal.' },
+    { t: 'Certifications and honours', x: 'Machine Learning Specialization by Stanford and DeepLearning.AI with Andrew Ng (May 2024). NPTEL Elite: Mobile Virtual Reality and AI (IIT Mandi, 84%), Research Methodology (IIT Madras, 75%), Developing Soft Skills and Personality (IIT Kanpur, 83%). NPTEL Programming with Generative AI (IISc Bangalore). IEEE CCET 2022 organizing committee member and poster presenter on AI. University Silver Medal.' },
+    { t: 'How she works', x: 'She tests before she ships: 97 automated tests on the ERP, self-test scripts for HR flows, load tests with Locust, LLM tracing with Weave, monitoring with Grafana, and a full database backup before risky changes.' },
+    { t: 'Contact and links', x: 'Email: anandaparna1203@gmail.com. LinkedIn: https://www.linkedin.com/in/aparna-anand-067697227/. GitHub: https://github.com/anandaparna126 (53 public repositories). Resume: on this site. Portfolio: https://anandaparna126.github.io' },
+    { t: 'Calls and availability', x: 'Calls are 30 minutes, on weekdays (Monday to Friday) between 10:00 am and 6:00 pm India time (IST), from 12 hours ahead up to 6 weeks ahead. Aparna confirms every booking by email with a meeting link.' },
+    { t: 'About this agent', x: 'This agent was built by Aparna as a live demo. It retrieves facts from her profile (RAG), plans with an LLM through Pollinations, and uses tools: search_profile, check_slots, book_call, send_message, open_resume, go_to, set_theme, try_ocr and github_activity. Emails and bookings wait for the visitor to confirm. If the model is unreachable, a built-in planner takes over.' }
+  ];
+  const STOP = new Set('a an the is are was were be been has have had to of in on for and or with at by from about as also any some me my you your i it its this that there their they them what which who whom how do does did done can could would should will please tell show give her hers she aparna anand aparnas build built builds building made make makes work works worked use used using ke ki ka ko hai hain mein me se kya kaun bare baare batao btao bataye kuch'.split(' '));
+  const toks = s => (s.toLowerCase().match(/[a-z0-9+#]+/g) || []).filter(w => w.length > 1 && !STOP.has(w));
+  const kbIdx = KB.map(c => ({ ...c, tk: toks(c.x), tt: toks(c.t) }));
+  const df = {};
+  kbIdx.forEach(c => new Set([...c.tk, ...c.tt]).forEach(w => { df[w] = (df[w] || 0) + 1; }));
+  // BM25-style scoring; a word in a note's title counts three times as much as one in its text
+  const scored = q => {
+    // words match exactly, by prefix ("cert" → certifications) or by a shared 6-letter stem (certificates ≈ certifications)
+    const qt = toks(q), same = (x, w) => x === w || (w.length > 3 && x.startsWith(w)) || (w.length >= 6 && x.length >= 6 && x.slice(0, 6) === w.slice(0, 6));
+    const aboutBot = /\b(agent|bot|chatbot|you|yourself)\b/i.test(q);
+    return kbIdx.map(c => {
+      let s = 0;
+      qt.forEach(w => {
+        const tf = c.tk.filter(x => same(x, w)).length + 3 * c.tt.filter(x => same(x, w)).length;
+        if (tf) s += (tf * 2.2 / (tf + 1.2)) * Math.log(1 + KB.length / (df[w] || 1));
+      });
+      if (c.t === 'About this agent') s *= !aboutBot ? .3 : /\b(this|you|yourself)\b/i.test(q) ? 3 : 1;   // talk about itself only when asked
+      return { c, s };
+    }).filter(r => r.s > 0).sort((a, b) => b.s - a.s);
+  };
+  const retrieve = (q, k = 4) => scored(q).slice(0, k).map(r => r.c);
+  // for the built-in planner: the best note, plus the next one only if it is nearly as relevant
+  const topNotes = q => { const r = scored(q); return r.filter((x, i) => i === 0 || (i === 1 && x.s >= r[0].s * .75)).map(x => x.c); };
+
+  // --- understanding dates, times, names and emails (shared by the tools and the built-in planner) ---
+  const DAY = 86400000, WEEK = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  const HINDI_DAYS = { ravivar: 0, somvar: 1, mangalvar: 2, budhvar: 3, guruvar: 4, shukravar: 5, shanivar: 6 };
+  const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  const ymd = ms => { const d = new Date(ms); return [d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()]; };
+  const todayUtc = () => { const n = istNow(); return Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate()); };
+  const parseDate = raw => {
+    if (!raw) return null;
+    const s = String(raw).toLowerCase(), base = todayUtc();
+    let m;
+    if ((m = s.match(/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/))) return [+m[1], +m[2] - 1, +m[3]];
+    if (/\b(today|aaj)\b/.test(s)) return ymd(base);
+    if (/\b(day after tomorrow|parso|parson)\b/.test(s)) return ymd(base + 2 * DAY);
+    if (/\b(tomorrow|kal)\b/.test(s)) return ymd(base + DAY);
+    const cur = new Date(base).getUTCDay();
+    const wd = WEEK.findIndex(d => new RegExp(`\\b${d.slice(0, 3)}(${d.slice(3)})?\\b`).test(s));
+    const hd = Object.keys(HINDI_DAYS).find(d => s.includes(d));
+    const target = wd >= 0 ? wd : hd ? HINDI_DAYS[hd] : -1;
+    if (target >= 0) return ymd(base + (((target - cur + 7) % 7) || 7) * DAY);
+    if ((m = s.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b/)) || (m = s.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s*(\d{1,2})\b/))) {
+      const dd = /^\d/.test(m[1]) ? +m[1] : +m[2], mo = MONTHS.indexOf(/^\d/.test(m[1]) ? m[2] : m[1]);
+      let y = new Date(base).getUTCFullYear();
+      if (Date.UTC(y, mo, dd) < base) y++;
+      return [y, mo, dd];
+    }
+    if ((m = s.match(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/))) {
+      let y = m[3] ? +m[3] : new Date(base).getUTCFullYear();
+      if (y < 100) y += 2000;
+      if (!m[3] && Date.UTC(y, +m[2] - 1, +m[1]) < base) y++;
+      return [y, +m[2] - 1, +m[1]];
+    }
+    return null;
+  };
+  const parseTime = raw => {
+    if (!raw) return null;
+    const s = String(raw).toLowerCase();
+    let m, h, mi = 0, ap = '';
+    if ((m = s.match(/\b(\d{1,2})[:.](\d{2})\s*(am|pm)?/))) { h = +m[1]; mi = +m[2]; ap = m[3] || ''; }
+    else if ((m = s.match(/\b(\d{1,2})\s*(am|pm|baje|bje|o'?clock)\b/))) { h = +m[1]; ap = m[2]; }
+    else if ((m = s.match(/\b(noon|dopahar)\b/))) { h = 12; }
+    else return null;
+    if (ap === 'pm' && h < 12) h += 12;
+    if (ap === 'am' && h === 12) h = 0;
+    if (ap !== 'am' && ap !== 'pm' && h >= 1 && h <= 7) h += 12;   // "3 baje" in work hours means 3 pm
+    return h < 24 && mi < 60 ? [h, mi] : null;
+  };
+  const findEmail = s => (String(s || '').match(/[^\s@<>()"',;:]+@[^\s@<>()"',;:]+\.[a-z]{2,}/i) || [])[0] || null;
+  const findName = s => { const m = String(s || '').match(/(?:my name is|i am|i'm|this is|mera naam|naam)\s+([a-z][a-z.]+(?:\s+[a-z][a-z.]+)?)/i); return m ? m[1].replace(/\b\w/g, c => c.toUpperCase()) : null; };
+  const nextOpenDays = (k = 4) => { const out = [], base = todayUtc(); for (let i = 0; i <= BOOKING.weeksAhead * 7 && out.length < k; i++) { const d = ymd(base + i * DAY); if (isOpenDay(...d)) out.push(d); } return out; };
+  const isoDay = d => `${d[0]}-${String(d[1] + 1).padStart(2, '0')}-${String(d[2]).padStart(2, '0')}`;
+  const shortDay = d => new Date(Date.UTC(...d)).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+
+  // --- chat UI ---
+  const ag = { root: $('.agent'), log: $('#agLog'), form: $('#agForm'), input: $('#agInput'), send: $('#agSend'), state: $('#agState'), busy: false };
+  const escHtml = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const richText = s => escHtml(s)
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+    .replace(/(https?:\/\/[^\s)]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
+    .replace(/^\s*[-*]\s+/gm, '• ');
+  const scrollLog = () => { ag.log.scrollTop = ag.log.scrollHeight; };
+  const addMsg = (who, text, { sources, actions } = {}) => {
+    const el = document.createElement('div');
+    el.className = 'msg ' + who;
+    el.innerHTML = `<p>${who === 'me' ? escHtml(text) : richText(text)}</p>`;
+    if (sources && sources.length) el.insertAdjacentHTML('beforeend', `<div class="srcs">${sources.map(s => `<span>${escHtml(s)}</span>`).join('')}</div>`);
+    if (actions && actions.length) {
+      const box = document.createElement('div'); box.className = 'acts';
+      actions.forEach(a => {
+        if (a.href) box.insertAdjacentHTML('beforeend', `<a href="${escHtml(a.href)}" target="_blank" rel="noopener" class="${a.primary ? 'primary' : ''}">${escHtml(a.label)}</a>`);
+        else { const b = document.createElement('button'); b.type = 'button'; b.textContent = a.label; if (a.primary) b.className = 'primary'; b.onclick = () => a.say ? ask(a.say) : a.run && a.run(b); box.appendChild(b); }
+      });
+      el.appendChild(box);
+    }
+    ag.log.appendChild(el); scrollLog();
+    return el;
+  };
+  let traceBox = null;
+  const trace = text => {
+    if (!traceBox) { traceBox = document.createElement('div'); traceBox.className = 'trace'; ag.log.appendChild(traceBox); }
+    traceBox.querySelectorAll('.run').forEach(s => s.classList.remove('run'));
+    traceBox.insertAdjacentHTML('beforeend', `<span class="run">${escHtml(text)}</span>`);
+    scrollLog();
+  };
+  const endTrace = () => { if (traceBox) traceBox.querySelectorAll('.run').forEach(s => s.classList.remove('run')); traceBox = null; };
+  let typingEl = null;
+  const typing = on => {
+    if (on && !typingEl) { typingEl = document.createElement('div'); typingEl.className = 'typing'; typingEl.innerHTML = '<i></i><i></i><i></i>'; ag.log.appendChild(typingEl); scrollLog(); }
+    if (!on && typingEl) { typingEl.remove(); typingEl = null; }
+  };
+  const setBusy = on => {
+    ag.busy = on; ag.root.classList.toggle('thinking', on);
+    ag.input.disabled = on; ag.send.disabled = on;
+    ag.state.lastChild.textContent = on ? 'thinking' : 'online';
+    if (!on) ag.input.focus({ preventScroll: true });
+  };
+
+  // a confirmation card: nothing leaves the page until the visitor presses Confirm
+  const confirmCard = (title, rows, onConfirm) => new Promise(resolve => {
+    const el = document.createElement('div');
+    el.className = 'confirm';
+    el.innerHTML = `<h5>${escHtml(title)}</h5><dl>${rows.map(([k, v]) => `<dt>${escHtml(k)}</dt><dd>${escHtml(v)}</dd>`).join('')}</dl><div class="acts"><button type="button" class="ok">Confirm</button><button type="button" class="no">Cancel</button></div>`;
+    const [ok, no] = el.querySelectorAll('button');
+    ok.onclick = async () => { ok.disabled = no.disabled = true; ok.textContent = 'Sending…'; await onConfirm(); ok.textContent = 'Done ✓'; resolve(true); };
+    no.onclick = () => { ok.disabled = no.disabled = true; no.textContent = 'Cancelled'; addMsg('bot', 'No problem, I have not sent anything.'); resolve(false); };
+    ag.log.appendChild(el); scrollLog();
+  });
+
+  // --- tools ---
+  const SECTIONS = { about: 'about', experience: 'experience', projects: 'projects', work: 'projects', 'case-study': 'case-study', 'case study': 'case-study', rebat: 'case-study', agent: 'agent', ocr: 'ocr-demo', 'ocr-demo': 'ocr-demo', tests: 'tests', github: 'github', now: 'now', certificates: 'certificates', education: 'certificates', contact: 'contact', booking: 'contact', top: 'top', home: 'top' };
+  const goTo = id => {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    if (window.__lenis) window.__lenis.scrollTo(el, { offset: id === 'top' ? 0 : -70, duration: 1.4 });
+    else el.scrollIntoView({ behavior: 'smooth' });
+    return true;
+  };
+  const bookingCheck = ({ date, time, name, email }) => {
+    const d = Array.isArray(date) ? date : parseDate(date);
+    if (!d) return { ok: false, need: 'date', error: 'I could not understand the date.', open_days: nextOpenDays(5).map(isoDay) };
+    if (!isOpenDay(...d)) return { ok: false, need: 'date', error: `${fmtDay(...d)} is not open for calls (weekdays only, 10 am to 6 pm IST, 12 hours to 6 weeks ahead).`, open_days: nextOpenDays(5).map(isoDay) };
+    const slots = slotsFor(...d), tm = Array.isArray(time) ? time : parseTime(time);
+    if (!tm) return { ok: false, need: 'time', day: d, free_times: slots.map(s => fmtTime(...s)) };
+    if (!slots.some(([h, mi]) => h === tm[0] && mi === tm[1])) return { ok: false, need: 'time', day: d, error: `${fmtTime(...tm)} is not available on ${fmtDay(...d)}.`, free_times: slots.map(s => fmtTime(...s)) };
+    if (!name) return { ok: false, need: 'name', day: d, time: tm };
+    if (!findEmail(email)) return { ok: false, need: 'email', day: d, time: tm };
+    return { ok: true, day: d, time: tm };
+  };
+  const doBooking = async ({ day, time, name, email, topic }) => {
+    const when = `${fmtDay(...day)}, ${fmtTime(...time)} IST`;
+    const start = istToUtc(...day, ...time), end = new Date(start.getTime() + BOOKING.minutes * 60000);
+    const gfmt = dt => dt.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    const fields = { Name: name, Email: findEmail(email), 'Requested time': when, Topic: topic || '(not given)', 'Booked via': 'AI agent on portfolio' };
+    let viaMail = false;
+    try { await deliver(`Call request: ${when}`, fields, fields.Email); track('call-booked', 'Call booked (agent)'); }
+    catch (e) { viaMail = true; openMail(`Call request: ${when}`, fields); }
+    const gcal = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+      + `&text=${encodeURIComponent('30-minute call with Aparna Anand')}&dates=${gfmt(start)}/${gfmt(end)}`
+      + `&details=${encodeURIComponent('Aparna will confirm by email with a meeting link.' + (topic ? '\n\nTopic: ' + topic : ''))}&add=${encodeURIComponent(MY_EMAIL)}`;
+    addMsg('bot', viaMail
+      ? `Your email app has opened with the request filled in. Press Send there and you're done. Requested: ${when}.`
+      : `Booked! Aparna will confirm ${when} by email at ${fields.Email} with a meeting link.`, { actions: [{ label: 'Add to Google Calendar ↗', href: gcal, primary: true }] });
+  };
+  const doMessage = async ({ name, email, subject, message }) => {
+    const fields = { Name: name, Email: findEmail(email), Message: message, 'Sent via': 'AI agent on portfolio' };
+    const subj = subject ? `Portfolio message: ${subject}` : `Portfolio message from ${name}`;
+    try { await deliver(subj, fields, fields.Email); track('contact-form-sent', 'Message sent (agent)'); addMsg('bot', `Sent! Aparna will reply to ${fields.Email}.`); }
+    catch (e) { openMail(subj, fields); addMsg('bot', 'Your email app has opened with the message filled in. Just press Send.'); }
+  };
+
+  const TOOLS = {
+    search_profile: async ({ query }) => { trace(`search_profile("${String(query).slice(0, 40)}")`); const r = retrieve(query || '', 4); return { results: r.map(c => ({ title: c.t, text: c.x })) }; },
+    check_slots: async ({ date }) => {
+      const d = parseDate(date);
+      trace(`check_slots(${d ? shortDay(d) : date || 'next days'})`);
+      if (!d) return { open_days: nextOpenDays(5).map(d => ({ date: isoDay(d), label: fmtDay(...d), first_free: fmtTime(...slotsFor(...d)[0]) })) };
+      if (!isOpenDay(...d)) return { date: isoDay(d), open: false, reason: 'Weekdays only, 10 am to 6 pm IST, 12 hours to 6 weeks ahead.', next_open_days: nextOpenDays(3).map(isoDay) };
+      return { date: isoDay(d), label: fmtDay(...d), free_times: slotsFor(...d).map(s => fmtTime(...s)) };
+    },
+    book_call: async args => {
+      trace('book_call(…) → validating');
+      const chk = bookingCheck(args);
+      if (!chk.ok) return { status: 'needs_more', ...chk, day: chk.day ? isoDay(chk.day) : undefined, time: chk.time ? fmtTime(...chk.time) : undefined };
+      const when = `${fmtDay(...chk.day)}, ${fmtTime(...chk.time)} IST`;
+      trace('waiting for your confirmation');
+      confirmCard('Book this call?', [['When', when], ['Length', '30 minutes'], ['Name', args.name], ['Email', findEmail(args.email)], ['Topic', args.topic || '—']],
+        () => doBooking({ day: chk.day, time: chk.time, name: args.name, email: args.email, topic: args.topic }));
+      return { status: 'confirmation_card_shown', when, note: 'The visitor must press Confirm on the card. Tell them briefly.' };
+    },
+    send_message: async args => {
+      trace('send_message(…) → validating');
+      if (!args.name) return { status: 'needs_more', need: 'name' };
+      if (!findEmail(args.email)) return { status: 'needs_more', need: 'email' };
+      if (!args.message || String(args.message).trim().length < 3) return { status: 'needs_more', need: 'message' };
+      trace('waiting for your confirmation');
+      confirmCard('Send this message to Aparna?', [['From', args.name], ['Email', findEmail(args.email)], ['Subject', args.subject || '—'], ['Message', args.message]], () => doMessage(args));
+      return { status: 'confirmation_card_shown', note: 'The visitor must press Confirm on the card. Tell them briefly.' };
+    },
+    open_resume: async () => { trace('open_resume()'); addMsg('bot', 'Here is Aparna\'s resume (2 pages, PDF).', { actions: [{ label: 'Open resume ↗', href: 'resume/Aparna_Anand_Resume.pdf', primary: true }] }); track('resume-download', 'Resume opened (agent)'); return { status: 'resume_button_shown' }; },
+    go_to: async ({ section }) => { const id = SECTIONS[String(section || '').toLowerCase()] || String(section || '').toLowerCase(); trace(`go_to(${id})`); return goTo(id) ? { status: 'scrolled', section: id } : { status: 'unknown_section', sections: Object.keys(SECTIONS) }; },
+    set_theme: async ({ mode }) => {
+      const want = /light|day|sunrise|white/i.test(mode) ? 'light' : 'dark';
+      trace(`set_theme(${want})`);
+      const isLight = document.documentElement.dataset.theme === 'light';
+      if ((want === 'light') !== isLight) $('#theme').click();
+      return { status: 'ok', mode: want };
+    },
+    try_ocr: async () => { trace('try_ocr() → scrolling to the OCR demo'); goTo('ocr-demo'); setTimeout(() => $('#ocrSample').click(), 1500); return { status: 'ocr_demo_started_on_sample_bill' }; },
+    github_activity: async () => {
+      trace('github_activity()');
+      try {
+        const [u, r] = await Promise.all([fetch('https://api.github.com/users/anandaparna126').then(x => x.json()), fetch('https://api.github.com/users/anandaparna126/repos?sort=pushed&per_page=5').then(x => x.json())]);
+        return { public_repos: u.public_repos, on_github_since: new Date(u.created_at).getFullYear(), latest: r.map(x => ({ name: x.name, language: x.language, updated: ago(x.pushed_at) })) };
+      } catch (e) { return { error: 'GitHub did not answer', profile: 'https://github.com/anandaparna126' }; }
+    }
+  };
+  const S = (name, description, properties = {}, required = []) => ({ type: 'function', function: { name, description, parameters: { type: 'object', properties, required } } });
+  const str = d => ({ type: 'string', description: d });
+  const TOOL_DEFS = [
+    S('search_profile', 'Search Aparna\'s profile (experience, projects, skills, education, certificates, contact). Use for any factual question about her.', { query: str('what to look for') }, ['query']),
+    S('check_slots', 'List free 30-minute call times. Without a date, returns the next open days.', { date: str('a date such as 2026-11-24, "next Tuesday" or "tomorrow"') }),
+    S('book_call', 'Book a 30-minute call with Aparna. Needs date, time, the visitor\'s name and email. Shows a confirmation card to the visitor.', { date: str('date, e.g. 2026-11-24 or "next Tuesday"'), time: str('time in IST, e.g. "3:00 pm" or "15:00"'), name: str('visitor name'), email: str('visitor email'), topic: str('what the call is about') }, ['date', 'time', 'name', 'email']),
+    S('send_message', 'Email Aparna on the visitor\'s behalf. Needs their name, email and the message. Shows a confirmation card.', { name: str('visitor name'), email: str('visitor email'), subject: str('short subject'), message: str('the message text') }, ['name', 'email', 'message']),
+    S('open_resume', 'Show a button that opens Aparna\'s resume PDF.'),
+    S('go_to', 'Scroll the page to a section.', { section: { type: 'string', enum: ['top', 'about', 'experience', 'projects', 'case-study', 'agent', 'ocr', 'tests', 'github', 'now', 'certificates', 'contact'] } }, ['section']),
+    S('set_theme', 'Switch the site between light (sunrise) and dark (starry) theme.', { mode: { type: 'string', enum: ['light', 'dark'] } }, ['mode']),
+    S('try_ocr', 'Scroll to the live bill OCR demo and run it on the sample bill.'),
+    S('github_activity', 'Get Aparna\'s live GitHub stats and most recently updated repositories.')
+  ];
+  const systemPrompt = () => {
+    const n = istNow();
+    return `You are the AI agent on Aparna Anand's portfolio website. Visitors are recruiters, clients and engineers.
+Today is ${fmtDay(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate())} ${n.getUTCFullYear()}, ${fmtTime(n.getUTCHours(), n.getUTCMinutes())} IST.
+Rules:
+- Talk about Aparna in the third person (she/her). Be warm, clear and brief: at most about 90 words unless asked for detail.
+- Reply in the visitor's language and style (English, Hindi or Hinglish).
+- Use only facts from the profile context or from tools. Never invent numbers, employers, dates or links. If you don't know, say so and offer to send Aparna a message.
+- To act, call a tool. For book_call and send_message, collect every required field first (ask for anything missing, one short question at a time). Never make up the visitor's name or email.
+- Calls: 30 minutes, weekdays 10:00 am to 6:00 pm IST, 12 hours to 6 weeks ahead. Use check_slots when the visitor has not picked a free time.
+- After book_call or send_message returns confirmation_card_shown, tell the visitor to press Confirm on the card. Do not say it is sent yet.
+- Do not use markdown headings or tables. Short bullet lists are fine.`;
+  };
+  let history = [];
+  const callLLM = async messages => {
+    const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 35000);
+    try {
+      const r = await fetch(AGENT_LLM, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'openai', messages, tools: TOOL_DEFS, tool_choice: 'auto', temperature: .4, referrer: 'anandaparna126.github.io' }), signal: ctrl.signal });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const j = await r.json();
+      const m = j.choices && j.choices[0] && j.choices[0].message;
+      if (!m) throw new Error('empty reply');
+      return m;
+    } finally { clearTimeout(timer); }
+  };
+  const safeJSON = s => { try { return typeof s === 'string' ? JSON.parse(s) : (s || {}); } catch (e) { return {}; } };
+  const llmTurn = async text => {
+    const ctx = retrieve(text, 4);
+    if (ctx.length) trace(`retrieved ${ctx.length} profile notes`);
+    const msgs = [
+      { role: 'system', content: systemPrompt() },
+      ...history.slice(-12),
+      { role: 'user', content: ctx.length ? `${text}\n\n[Profile context]\n${ctx.map(c => `# ${c.t}\n${c.x}`).join('\n\n')}` : text }
+    ];
+    trace('planning with the language model');
+    for (let step = 0; step < 5; step++) {
+      const m = await callLLM(msgs);
+      const calls = m.tool_calls || [];
+      if (calls.length) {
+        msgs.push({ role: 'assistant', content: m.content || '', tool_calls: calls });
+        for (const tc of calls) {
+          const fn = TOOLS[tc.function && tc.function.name];
+          const out = fn ? await fn(safeJSON(tc.function.arguments)) : { error: 'unknown tool' };
+          msgs.push({ role: 'tool', tool_call_id: tc.id, content: JSON.stringify(out) });
+        }
+        continue;
+      }
+      const reply = (m.content || '').trim();
+      if (!reply) throw new Error('no answer');
+      history.push({ role: 'user', content: text }, { role: 'assistant', content: reply });
+      return { reply, sources: ctx.map(c => c.t) };
+    }
+    throw new Error('too many steps');
+  };
+
+  // --- built-in planner: used when the model can't be reached; covers the same jobs with rules ---
+  let flow = null;
+  const chipsFor = list => list.map(t => ({ label: t, say: t }));
+  const runFlow = async text => {
+    const f = flow, low = (text || '').toLowerCase().trim();
+    if (/^(cancel|stop|nevermind|never mind|rehne do|chhodo)\b/.test(low)) { flow = null; return addMsg('bot', 'Okay, cancelled.'); }
+    if (text) {
+      if (f.need === 'date') { const d = parseDate(text); if (d) f.data.date = d; const t = parseTime(text); if (t) f.data.time = t; }
+      else if (f.need === 'time') { const t = parseTime(text); if (t) f.data.time = t; }
+      else if (f.need === 'name') f.data.name = findName(text) || text.replace(/[^a-z .'-]/gi, '').trim().replace(/\b\w/g, c => c.toUpperCase());
+      else if (f.need === 'email') { const e = findEmail(text); if (e) f.data.email = e; }
+      else if (f.need === 'message') f.data.message = text.trim();
+      if (!f.data.email) f.data.email = findEmail(text) || f.data.email;
+    }
+    if (f.kind === 'book') {
+      const chk = bookingCheck(f.data);
+      if (chk.ok) { flow = null; return TOOLS.book_call({ ...f.data, date: isoDay(chk.day), time: fmtTime(...chk.time) }).then(() => addMsg('bot', 'Please check the details and press Confirm.')); }
+      f.need = chk.need;
+      if (chk.need === 'date') return addMsg('bot', `${chk.error && f.data.date ? chk.error + ' ' : ''}Which day suits you? Here are the next open days:`, { actions: chipsFor(nextOpenDays(5).map(shortDay)) });
+      if (chk.need === 'time') { f.data.date = chk.day; return addMsg('bot', `${chk.error ? chk.error + ' ' : ''}Free times on ${fmtDay(...chk.day)} (IST):`, { actions: chipsFor(chk.free_times.slice(0, 10)) }); }
+      if (chk.need === 'name') { f.data.date = chk.day; f.data.time = chk.time; return addMsg('bot', `${fmtDay(...chk.day)} at ${fmtTime(...chk.time)} works. What's your name?`); }
+      if (chk.need === 'email') return addMsg('bot', `Thanks${f.data.name ? ', ' + f.data.name.split(' ')[0] : ''}! Which email should Aparna send the invite to?`);
+    } else {
+      const d = f.data;
+      if (!d.name) { f.need = 'name'; return addMsg('bot', 'Sure, I\'ll pass it on. What\'s your name?'); }
+      if (!findEmail(d.email)) { f.need = 'email'; return addMsg('bot', `Thanks, ${d.name.split(' ')[0]}. Which email should Aparna reply to?`); }
+      if (!d.message) { f.need = 'message'; return addMsg('bot', 'What would you like to tell her?'); }
+      flow = null;
+      return TOOLS.send_message(d).then(() => addMsg('bot', 'Please check the message and press Confirm.'));
+    }
+  };
+  const localTurn = async text => {
+    const low = text.toLowerCase();
+    if (flow) return runFlow(text);
+    if (/\b(book|schedule|meeting|meet|call|calendar|appointment|slot|interview)\b|milna|baat kar|time fix/.test(low) && !/calling system|agentic/.test(low)) {
+      flow = { kind: 'book', need: null, data: { date: parseDate(text), time: parseTime(text), name: findName(text), email: findEmail(text), topic: '' } };
+      return runFlow('');
+    }
+    if (/\b(mail|email|message|msg|contact|send|reach|bhejo|bhej|likh)\b/.test(low) && !/\b(resume|cv)\b/.test(low)) {
+      const msgPart = (text.match(/(?:saying|that|message|msg|:)\s*["“]?(.{4,})$/i) || [])[1];
+      flow = { kind: 'msg', need: null, data: { name: findName(text), email: findEmail(text), message: msgPart && !findEmail(msgPart) ? msgPart.replace(/["”]$/, '') : '' } };
+      return runFlow('');
+    }
+    if (/\b(resume|cv|biodata)\b/.test(low)) return TOOLS.open_resume();
+    if (/\b(light|dark|sunrise|night)\b/.test(low) && /\b(mode|theme|switch|change|karo|kar do)\b/.test(low)) { const r = await TOOLS.set_theme({ mode: /light|sunrise|day/.test(low) ? 'light' : 'dark' }); return addMsg('bot', `Done, switched to ${r.mode} mode.`); }
+    if (/\b(ocr|bill|invoice)\b/.test(low) && /\b(try|run|demo|show|dikhao)\b/.test(low)) { await TOOLS.try_ocr(); return addMsg('bot', 'Taking you to the OCR demo and running it on the sample bill.'); }
+    if (/\b(github|repo|repos|repositories)\b/.test(low)) {
+      const g = await TOOLS.github_activity();
+      return addMsg('bot', g.error ? 'GitHub did not answer just now. Her profile: https://github.com/anandaparna126' : `She has ${g.public_repos} public repositories (on GitHub since ${g.on_github_since}). Recently updated:\n${g.latest.map(r => `• ${r.name}${r.language ? ' (' + r.language + ')' : ''}, ${r.updated}`).join('\n')}`);
+    }
+    const nav = Object.keys(SECTIONS).find(k => low.includes(k));
+    if (nav && /\b(show|go|take|open|scroll|see|dikhao|le chalo|jao)\b/.test(low)) { await TOOLS.go_to({ section: nav }); return addMsg('bot', `Taking you to ${nav}.`); }
+    const hits = topNotes(text);
+    const generic = /\b(who|about|introduce|yourself|bare|baare|kaun|summary|tell me)\b/.test(low) && (!hits.length || hits[0].t === 'Summary' || toks(text).length === 0);
+    const best = generic ? [KB[0], KB[1]] : hits;
+    if (!best.length) return addMsg('bot', 'I couldn\'t find that in Aparna\'s profile. I can send her your question, or tell you about her work, projects or skills.', { actions: [{ label: 'Send her a message', say: 'Send Aparna a message' }, { label: 'Tell me about her', say: 'Tell me about Aparna' }] });
+    trace(`search_profile → ${best.map(c => c.t).join(', ')}`);
+    return addMsg('bot', best.map(c => c.x).join('\n\n'), { sources: best.map(c => c.t) });
+  };
+
+  // --- one turn: try the model, fall back to the built-in planner ---
+  const ask = async text => {
+    text = String(text || '').trim();
+    if (!text || ag.busy) return;
+    addMsg('me', text);
+    ag.input.value = '';
+    setBusy(true); typing(true);
+    let mode = 'llm';
+    try {
+      if (flow) throw new Error('mid-flow');   // finish a guided booking/message locally once started
+      const { reply, sources } = await llmTurn(text);
+      typing(false); endTrace();
+      addMsg('bot', reply, { sources });
+    } catch (err) {
+      mode = 'local';
+      if (err.message !== 'mid-flow') trace('model unavailable, using the built-in planner');
+      typing(false);
+      try { await localTurn(text); } catch (e) { addMsg('bot', 'Sorry, something went wrong. Please try again.'); }
+      endTrace();
+    }
+    setBusy(false);
+    track('agent-message', `Agent (${mode})`);
+  };
+  ag.form.addEventListener('submit', e => { e.preventDefault(); ask(ag.input.value); });
+  document.querySelectorAll('#agSugs button').forEach(b => b.addEventListener('click', () => { ask(b.textContent); }));
+
   // GitHub: live stats and the latest repositories (public API, no key needed)
   const GH_USER = 'anandaparna126';
   const langColor = { Python: '#3572A5', HTML: '#e34c26', TypeScript: '#3178c6', JavaScript: '#f1e05a', 'Jupyter Notebook': '#DA5B0B', CSS: '#563d7c' };
@@ -2138,6 +2652,7 @@
   let lenis = null;
   if (window.Lenis) {
     lenis = new Lenis({ lerp: .09, smoothWheel: true });
+    window.__lenis = lenis;   // the AI agent's go_to tool scrolls through this
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(t => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
