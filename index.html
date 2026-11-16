@@ -2387,7 +2387,8 @@ Rules:
 - Reply in the visitor's language and style (English, Hindi or Hinglish).
 - Use only facts from the profile context or from tools. Never invent numbers, employers, dates or links. If you don't know, say so and offer to send Aparna a message.
 - To act, call a tool. For book_call and send_message, collect every required field first (ask for anything missing, one short question at a time). Never make up the visitor's name or email.
-- Calls: 30 minutes, weekdays 10:00 am to 6:00 pm IST, 12 hours to 6 weeks ahead. Use check_slots when the visitor has not picked a free time.
+- Calls: 30 minutes, weekdays 10:00 am to 6:00 pm IST, 12 hours to 6 weeks ahead. If the visitor already gave a date and time, call book_call directly with whatever name and email they gave (the page asks for anything missing). Use check_slots only when they have not picked a time.
+- If the visitor wants to message, email or contact Aparna, call send_message with whatever details they gave.
 - After book_call or send_message returns confirmation_card_shown, tell the visitor to press Confirm on the card. Do not say it is sent yet.
 - Do not use markdown headings or tables. Short bullet lists are fine.`;
   };
@@ -2419,9 +2420,15 @@ Rules:
   const githubText = g => g.error ? 'GitHub did not answer just now. Her profile: https://github.com/anandaparna126'
     : `She has ${g.public_repos} public repositories (on GitHub since ${g.on_github_since}). Recently updated:\n${g.latest.map(r => `• ${r.name}${r.language ? ' (' + r.language + ')' : ''}, ${r.updated}`).join('\n')}`;
   // turn a tool's result into something the visitor sees (and hand unfinished bookings/messages to the guided flow)
-  const showToolResult = async (name, args, out, modelSaid) => {
+  const showToolResult = async (name, args, out, modelSaid, text = '') => {
     if (name === 'check_slots') {
-      if (out.free_times) return addMsg('bot', `Free times on ${out.label} (IST). Pick one:`, { actions: out.free_times.slice(0, 10).map(t => ({ label: t, say: `Book a call on ${out.label} at ${t}` })) });
+      // if the visitor already named a time that is free, skip the list and go straight to booking
+      const asked = parseTime(text), d = out.date && parseDate(out.date);
+      if (d && asked && out.free_times && out.free_times.includes(fmtTime(...asked))) {
+        flow = { kind: 'book', need: null, data: { date: d, time: asked, name: findName(text), email: findEmail(text), topic: ((text.match(/\b(?:about|regarding|for)\s+(.{3,80})$/i) || [])[1] || '').replace(/[.!]$/, '') } };
+        return runFlow('');
+      }
+      if (out.free_times) return addMsg('bot', `${asked ? `${fmtTime(...asked)} isn't free that day. ` : ''}Free times on ${out.label} (IST). Pick one:`, { actions: out.free_times.map(t => ({ label: t, say: `Book a call on ${out.label} at ${t}` })) });
       const days = (out.open_days || out.next_open_days || []).map(d => typeof d === 'string' ? parseDate(d) : parseDate(d.date)).filter(Boolean);
       return addMsg('bot', `${out.open === false ? out.reason + ' ' : ''}These days are open:`, { actions: days.map(d => ({ label: shortDay(d), say: `Show free times on ${shortDay(d)}` })) });
     }
@@ -2455,7 +2462,7 @@ Rules:
     if (said) addMsg('bot', said, { sources: calls.length ? [] : ctx.map(c => c.t) });
     for (const tc of calls) {
       const name = tc.function && tc.function.name, args = safeJSON(tc.function && tc.function.arguments), fn = TOOLS[name];
-      if (fn) await showToolResult(name, args, await fn(args), !!said);
+      if (fn) await showToolResult(name, args, await fn(args), !!said, text);
     }
     history.push({ role: 'user', content: text }, { role: 'assistant', content: said || `(ran ${calls.map(c => c.function.name).join(', ')})` });
   };
