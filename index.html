@@ -2391,46 +2391,73 @@ Rules:
 - After book_call or send_message returns confirmation_card_shown, tell the visitor to press Confirm on the card. Do not say it is sent yet.
 - Do not use markdown headings or tables. Short bullet lists are fine.`;
   };
-  let history = [];
+  // The free model tier allows one reply every ~45 s per visitor, so each turn makes exactly one model
+  // call: the profile notes ride along with the question, the model either answers or picks tools,
+  // and the page runs those tools and shows their results itself. Follow-up questions for missing
+  // details (name, email, time) are handled by the built-in planner, with no further model calls.
+  let history = [], llmReadyAt = 0;
+  const LLM_GAP = 46000;
   const callLLM = async messages => {
+    if (Date.now() < llmReadyAt) throw new Error('cooldown');
+    llmReadyAt = Date.now() + LLM_GAP;
     const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 35000);
     try {
-      const r = await fetch(AGENT_LLM, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'openai', messages, tools: TOOL_DEFS, tool_choice: 'auto', temperature: .4, referrer: 'anandaparna126.github.io' }), signal: ctrl.signal });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const r = await fetch(AGENT_LLM, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'openai', messages, tools: PLAN_TOOLS, tool_choice: 'auto', temperature: .4, referrer: 'anandaparna126.github.io' }), signal: ctrl.signal });
+      if (!r.ok) {
+        const wait = ((await r.text()).match(/retry after (\d+)\s*s/i) || [])[1];
+        if (wait) llmReadyAt = Date.now() + (+wait + 1) * 1000;
+        throw new Error('HTTP ' + r.status);
+      }
       const j = await r.json();
       const m = j.choices && j.choices[0] && j.choices[0].message;
       if (!m) throw new Error('empty reply');
       return m;
     } finally { clearTimeout(timer); }
   };
+  const PLAN_TOOLS = TOOL_DEFS.filter(t => t.function.name !== 'search_profile');
   const safeJSON = s => { try { return typeof s === 'string' ? JSON.parse(s) : (s || {}); } catch (e) { return {}; } };
+  const githubText = g => g.error ? 'GitHub did not answer just now. Her profile: https://github.com/anandaparna126'
+    : `She has ${g.public_repos} public repositories (on GitHub since ${g.on_github_since}). Recently updated:\n${g.latest.map(r => `• ${r.name}${r.language ? ' (' + r.language + ')' : ''}, ${r.updated}`).join('\n')}`;
+  // turn a tool's result into something the visitor sees (and hand unfinished bookings/messages to the guided flow)
+  const showToolResult = async (name, args, out, modelSaid) => {
+    if (name === 'check_slots') {
+      if (out.free_times) return addMsg('bot', `Free times on ${out.label} (IST). Pick one:`, { actions: out.free_times.slice(0, 10).map(t => ({ label: t, say: `Book a call on ${out.label} at ${t}` })) });
+      const days = (out.open_days || out.next_open_days || []).map(d => typeof d === 'string' ? parseDate(d) : parseDate(d.date)).filter(Boolean);
+      return addMsg('bot', `${out.open === false ? out.reason + ' ' : ''}These days are open:`, { actions: days.map(d => ({ label: shortDay(d), say: `Show free times on ${shortDay(d)}` })) });
+    }
+    if (name === 'book_call' || name === 'send_message') {
+      if (out.status === 'confirmation_card_shown') return modelSaid ? null : addMsg('bot', 'Please check the details and press Confirm.');
+      flow = name === 'book_call'
+        ? { kind: 'book', need: null, data: { date: parseDate(args.date), time: parseTime(args.time), name: args.name || null, email: findEmail(args.email), topic: args.topic || '' } }
+        : { kind: 'msg', need: null, data: { name: args.name || null, email: findEmail(args.email), subject: args.subject || '', message: args.message || '' } };
+      return runFlow('');
+    }
+    if (name === 'go_to') return modelSaid ? null : addMsg('bot', out.status === 'scrolled' ? `Taking you to ${out.section.replace('-', ' ')}.` : 'I could not find that section.');
+    if (name === 'set_theme') return modelSaid ? null : addMsg('bot', `Switched to ${out.mode} mode.`);
+    if (name === 'try_ocr') return modelSaid ? null : addMsg('bot', 'Taking you to the OCR demo and running it on the sample bill.');
+    if (name === 'github_activity') return addMsg('bot', githubText(out));
+    if (name === 'search_profile' && out.results && out.results[0]) return addMsg('bot', out.results[0].text, { sources: [out.results[0].title] });
+    return null;
+  };
   const llmTurn = async text => {
-    const ctx = retrieve(text, 4);
+    const ctx = retrieve(text, 5);
     if (ctx.length) trace(`retrieved ${ctx.length} profile notes`);
     const msgs = [
       { role: 'system', content: systemPrompt() },
-      ...history.slice(-12),
-      { role: 'user', content: ctx.length ? `${text}\n\n[Profile context]\n${ctx.map(c => `# ${c.t}\n${c.x}`).join('\n\n')}` : text }
+      ...history.slice(-10),
+      { role: 'user', content: ctx.length ? `${text}\n\n[Profile context, already retrieved for you]\n${ctx.map(c => `# ${c.t}\n${c.x}`).join('\n\n')}` : text }
     ];
     trace('planning with the language model');
-    for (let step = 0; step < 5; step++) {
-      const m = await callLLM(msgs);
-      const calls = m.tool_calls || [];
-      if (calls.length) {
-        msgs.push({ role: 'assistant', content: m.content || '', tool_calls: calls });
-        for (const tc of calls) {
-          const fn = TOOLS[tc.function && tc.function.name];
-          const out = fn ? await fn(safeJSON(tc.function.arguments)) : { error: 'unknown tool' };
-          msgs.push({ role: 'tool', tool_call_id: tc.id, content: JSON.stringify(out) });
-        }
-        continue;
-      }
-      const reply = (m.content || '').trim();
-      if (!reply) throw new Error('no answer');
-      history.push({ role: 'user', content: text }, { role: 'assistant', content: reply });
-      return { reply, sources: ctx.map(c => c.t) };
+    const m = await callLLM(msgs);
+    const calls = (m.tool_calls || []).slice(0, 2), said = (m.content || '').trim();
+    if (!said && !calls.length) throw new Error('no answer');
+    typing(false);
+    if (said) addMsg('bot', said, { sources: calls.length ? [] : ctx.map(c => c.t) });
+    for (const tc of calls) {
+      const name = tc.function && tc.function.name, args = safeJSON(tc.function && tc.function.arguments), fn = TOOLS[name];
+      if (fn) await showToolResult(name, args, await fn(args), !!said);
     }
-    throw new Error('too many steps');
+    history.push({ role: 'user', content: text }, { role: 'assistant', content: said || `(ran ${calls.map(c => c.function.name).join(', ')})` });
   };
 
   // --- built-in planner: used when the model can't be reached; covers the same jobs with rules ---
@@ -2503,12 +2530,12 @@ Rules:
     let mode = 'llm';
     try {
       if (flow) throw new Error('mid-flow');   // finish a guided booking/message locally once started
-      const { reply, sources } = await llmTurn(text);
+      await llmTurn(text);
       typing(false); endTrace();
-      addMsg('bot', reply, { sources });
     } catch (err) {
       mode = 'local';
-      if (err.message !== 'mid-flow') trace('model unavailable, using the built-in planner');
+      if (err.message === 'cooldown') trace('model is cooling down (free tier allows one reply per 45 s), answering with the built-in planner');
+      else if (err.message !== 'mid-flow') trace('model unavailable, using the built-in planner');
       typing(false);
       try { await localTurn(text); } catch (e) { addMsg('bot', 'Sorry, something went wrong. Please try again.'); }
       endTrace();
