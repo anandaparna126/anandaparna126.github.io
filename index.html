@@ -198,14 +198,16 @@
     .words .w.on { opacity: 1; }
 
     /* about */
-    .about { display: grid; grid-template-columns: 1.15fr 1fr; gap: 60px; align-items: start; }
-    .big-quote { font-family: "Instrument Serif", serif; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.25; }
+    .about { display: grid; grid-template-columns: 1.15fr 1fr; gap: 64px; align-items: center; }
+    .big-quote { font-family: "Instrument Serif", serif; font-size: clamp(28px, 3vw, 38px); line-height: 1.22; margin-top: 14px; }
+    /* while the section is held, each word fades in by itself, driven straight from scroll */
+    .words.cine .w { transition: none; opacity: var(--o, .15); filter: blur(calc((1 - var(--o, .15)) * 1.6px)); }
     .about-text { color: var(--muted); font-size: 17px; margin-top: 26px; }
     .counters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 36px; }
     .counter { padding: 20px; border: 1px solid var(--line); border-radius: 20px; background: var(--card); }
     .counter b { font-family: "Instrument Serif", serif; font-weight: 400; font-size: 48px; line-height: 1; display: block; }
     .counter small { color: var(--muted); font-size: 13.5px; }
-    .api { border-radius: 22px; overflow: hidden; background: var(--code); border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .6); font: 13.5px/1.85 "JetBrains Mono", monospace; color: #f4eaef; position: sticky; top: 110px; }
+    .api { border-radius: 22px; overflow: hidden; background: var(--code); border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .6); font: 13.5px/1.85 "JetBrains Mono", monospace; color: #f4eaef; position: relative; }
     .api .bar { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid rgba(255, 255, 255, .08); }
     .api .get { background: #6fd39b; color: #0f2418; padding: 1px 9px; border-radius: 6px; font-weight: 500; }
     .api .code200 { margin-left: auto; color: #6fd39b; opacity: 0; transition: opacity .4s; }
@@ -2184,13 +2186,25 @@
   mm.add('(min-width: 961px) and (min-height: 640px)', () => {
     // ---- about: the section holds still while the statement lights up word by word ----
     // (only when the whole section fits on screen, so nothing is hidden while it is held)
-    const words = $$('#quote .w');
+    const words = $$('#quote .w'), quote = $('#quote');
     if ($('#about .about').offsetHeight < innerHeight - 120) {
       window.__cineQuote = true;
-      ScrollTrigger.create({
-        trigger: '#about .about', start: 'center center', end: '+=90%', pin: true, scrub: true,
-        onUpdate: self => words.forEach((w, i) => w.classList.toggle('on', i / words.length < self.progress * 1.15))
+      quote.classList.add('cine');
+      // the timeline owns these now; drop the generic fade-in so the two never fight over opacity
+      ['#api', '#about .about-text', '#about .counters', '#quote'].forEach(s => $(s).classList.remove('rv', 'd1', 'd2', 'd3'));
+      // one eased timeline: words brighten one after another (each over a few words' worth of scroll,
+      // so the light flows rather than steps), the API card settles in, the counters rise last
+      const state = { p: 0 }, N = words.length, soft = 5;
+      const paint = () => words.forEach((w, i) => {
+        const k = Math.min(1, Math.max(0, (state.p * (N + soft) - i) / soft));
+        w.style.setProperty('--o', (.15 + .85 * k).toFixed(3));
       });
+      paint();
+      gsap.timeline({ scrollTrigger: { trigger: '#about .about', start: 'center center', end: '+=110%', pin: true, scrub: 1.2, anticipatePin: 1 } })
+        .to(state, { p: 1, ease: 'none', duration: 1, onUpdate: paint }, 0)
+        .from('#api', { y: 60, rotateX: 8, scale: .95, opacity: .4, transformPerspective: 1000, ease: 'power2.out', duration: .45 }, 0)
+        .from('#about .counters > div', { y: 40, opacity: 0, stagger: .06, ease: 'power2.out', duration: .3 }, .62)
+        .from('#about .about-text', { y: 24, opacity: .25, ease: 'power2.out', duration: .3 }, .55);
     }
 
     // ---- projects: a horizontal reel driven by vertical scroll ----
@@ -2228,6 +2242,7 @@
 
     return () => {
       window.__cineQuote = false;
+      $('#quote').classList.remove('cine');
       ScrollTrigger.removeEventListener('refreshInit', fitCards);
       projects.style.removeProperty('--card-h');
       projects.classList.remove('hscroll');
