@@ -2217,7 +2217,14 @@
     return h < 24 && mi < 60 ? [h, mi] : null;
   };
   const findEmail = s => (String(s || '').match(/[^\s@<>()"',;:]+@[^\s@<>()"',;:]+\.[a-z]{2,}/i) || [])[0] || null;
-  const findName = s => { const m = String(s || '').match(/(?:my name is|i am|i'm|this is|mera naam|naam)\s+([a-z][a-z.]+(?:\s+[a-z][a-z.]+)?)/i); return m ? m[1].replace(/\b\w/g, c => c.toUpperCase()) : null; };
+  // "I am Ravi Kumar" → Ravi Kumar; "Mera naam Priya hai" → Priya; "I am excited…" → no name.
+  // A second name word counts only when it is capitalised, so Hindi "hai" or a following verb is left out.
+  const NOT_NAMES = /^(excited|interested|looking|available|free|happy|glad|writing|reaching|from|with|here|a|an|the|not|very|so|also|currently|working|hiring|calling|planning|trying|going|sure|ok|okay|fine|good|keen|eager|a?[0-9])$/i;
+  const findName = s => {
+    const m = String(s || '').match(/(?:[Mm]y name is|[Ii] am|[Ii]'m|[Tt]his is|[Mm]era naam|[Nn]aam)\s+([A-Za-z][A-Za-z.]+)(?:\s+([A-Z][A-Za-z.]+))?/);
+    if (!m || NOT_NAMES.test(m[1])) return null;
+    return [m[1], m[2]].filter(Boolean).join(' ').replace(/\b\w/g, c => c.toUpperCase());
+  };
   const nextOpenDays = (k = 4) => { const out = [], base = todayUtc(); for (let i = 0; i <= BOOKING.weeksAhead * 7 && out.length < k; i++) { const d = ymd(base + i * DAY); if (isOpenDay(...d)) out.push(d); } return out; };
   const isoDay = d => `${d[0]}-${String(d[1] + 1).padStart(2, '0')}-${String(d[2]).padStart(2, '0')}`;
   const shortDay = d => new Date(Date.UTC(...d)).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
@@ -2319,6 +2326,26 @@
     catch (e) { openMail(subj, fields); addMsg('bot', 'Your email app has opened with the message filled in. Just press Send.'); }
   };
 
+  // never trust the model with the visitor's own details: take name and email exactly as typed,
+  // and strip the instruction ("mail Aparna that…", "my name is…") out of the message body
+  let lastUserText = '';
+  const groundArgs = args => {
+    const a = { ...args }, typedEmail = findEmail(lastUserText), typedName = findName(lastUserText);
+    if (typedEmail) a.email = typedEmail;
+    if (typedName) a.name = typedName;
+    if (a.message) {
+      a.message = String(a.message)
+        .replace(/^\s*(?:please\s+)?(?:send|write|drop|tell)\s+(?:aparna|her)\s+(?:an?\s+)?(?:quick\s+)?(?:e-?mail|mail|message|msg|note)?\s*(?:saying|that|:)?\s*/i, '')
+        .replace(/^\s*(?:please\s+)?(?:aparna\s*(?:ko|se|to)?\s*)?(?:ek\s+)?(?:e-?mail|mail|message|msg|note)\s*(?:bhejo|bhej\s*do|send|kar\s*do|karo|likho)?\s*(?:ki|that|saying|:)?\s*/i, '')
+        .replace(/\s*(?:mera naam|my name is)\b[\s\S]*$/i, '')
+        .trim();
+      // "I am Priya, priya@x.com" at the end is a signature, but "I am excited to talk" is part of the message
+      if (/\b(?:i am|i'm|this is)\b[^.!?]*@/i.test(a.message)) a.message = a.message.replace(/\s*\b(?:i am|i'm|this is)\b[^.!?]*@[\s\S]*$/i, '').trim();
+      a.message = a.message.replace(/\s*[,.]?\s*(?:email\s*[:\-]?\s*)?[^\s@]+@[^\s@]+\.[a-z]{2,}\s*$/i, '').trim();
+      if (a.message) a.message = a.message[0].toUpperCase() + a.message.slice(1);
+    }
+    return a;
+  };
   const TOOLS = {
     search_profile: async ({ query }) => { trace(`search_profile("${String(query).slice(0, 40)}")`); const r = retrieve(query || '', 4); return { results: r.map(c => ({ title: c.t, text: c.x })) }; },
     check_slots: async ({ date }) => {
@@ -2329,6 +2356,7 @@
       return { date: isoDay(d), label: fmtDay(...d), free_times: slotsFor(...d).map(s => fmtTime(...s)) };
     },
     book_call: async args => {
+      args = groundArgs(args);
       trace('book_call(…) → validating');
       const chk = bookingCheck(args);
       if (!chk.ok) return { status: 'needs_more', ...chk, day: chk.day ? isoDay(chk.day) : undefined, time: chk.time ? fmtTime(...chk.time) : undefined };
@@ -2339,6 +2367,7 @@
       return { status: 'confirmation_card_shown', when, note: 'The visitor must press Confirm on the card. Tell them briefly.' };
     },
     send_message: async args => {
+      args = groundArgs(args);
       trace('send_message(…) → validating');
       if (!args.name) return { status: 'needs_more', need: 'name' };
       if (!findEmail(args.email)) return { status: 'needs_more', need: 'email' };
@@ -2531,6 +2560,7 @@ Rules:
   const ask = async text => {
     text = String(text || '').trim();
     if (!text || ag.busy) return;
+    lastUserText = text;
     addMsg('me', text);
     ag.input.value = '';
     setBusy(true); typing(true);
