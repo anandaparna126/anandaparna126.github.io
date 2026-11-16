@@ -1892,14 +1892,24 @@
   const amountsIn = line => (line.match(/\d[\d,]*(?:\.\d{1,2})?(?!\s*%)/g) || [])
     .map(s => s.replace(/,/g, '')).filter(s => /\d/.test(s) && !/^\d{1,2}$/.test(s)).map(Number).filter(n => isFinite(n));
   const money = n => '₹ ' + n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const parseBill = raw => {
+  // a line reads like real words, not OCR noise from icons, tab bars or shading
+  const looksLikeWords = l => {
+    const chars = l.replace(/\s/g, ''), letters = (l.match(/[a-z]/gi) || []).length, toks = l.split(/\s+/).filter(Boolean);
+    return chars.length >= 3 && letters / chars.length >= .75
+      && toks.filter(t => t.length === 1).length <= toks.length * .25
+      && toks.some(t => /^[a-z]{3,}/i.test(t));
+  };
+  // lineConf: Tesseract's own confidence per line, used to skip lines it was unsure about
+  const parseBill = (raw, lineConf = []) => {
     const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
     const up = raw.toUpperCase();
     const out = {};
+    const sure = new Map(lineConf.map(l => [l.text.trim(), l.confidence]));
     // the business name is usually the first real line; drop document titles printed beside it
     out.vendor = lines.slice(0, 6)
+      .filter(l => !sure.size || (sure.get(l) ?? 100) >= 70)
       .map(l => l.replace(/\b(?:tax\s+)?invoice\b|\bbill\s+of\s+supply\b|\bcash\s+memo\b|\bestimate\b|\b(?:original|duplicate)(?:\s+copy)?\b/gi, '').replace(/[‘’"|]/g, '').replace(/\s{2,}/g, ' ').trim())
-      .find(l => /[a-z]{3}/i.test(l) && l.length >= 3 && l.length <= 60 && !/gstin|date|sample|phone|mob|email|@|bill to|invoice no|www\.|\d{6}/i.test(l)) || null;
+      .find(l => looksLikeWords(l) && l.length <= 60 && !/gstin|date|sample|phone|mob|email|@|bill to|invoice no|www\.|\d{6}/i.test(l)) || null;
     const inv = raw.match(/(?:invoice|inv|bill)\s*(?:no|number|#)\.?\s*[:\-]?\s*([A-Z0-9][A-Z0-9\/\-]{2,})/i);
     out.invoice = inv ? inv[1] : null;
     const dateLine = lines.find(l => /date/i.test(l)) || '';
@@ -1917,6 +1927,11 @@
     const totLine = pick(/grand\s*total|total\s*amount|amount\s*payable|net\s*(?:amount|payable)|invoice\s*total/i) || pick(/\btotal\b/i);
     const tot = totLine && !/sub\s*total/i.test(totLine) ? amountsIn(totLine).pop() : null;
     out.total = tot ? money(tot) : null;
+    // is this a bill at all? count bill fields plus lines that use bill words
+    const billWords = lines.filter(l => /invoice|bill|receipt|gst|total|amount|qty|quantity|rate|subtotal|cash\s*memo|tax/i.test(l)).length;
+    const score = ['invoice', 'date', 'gstin', 'tax', 'total'].filter(k => out[k]).length + (billWords >= 3 ? 1 : 0);
+    out.isBill = score >= 2;
+    if (!out.isBill) out.vendor = null;
     return out;
   };
 
@@ -1953,15 +1968,18 @@
         });
       }
       const { data } = await ocr.worker.recognize(im.url);
-      const fields = parseBill(data.text);
+      const { isBill, ...fields } = parseBill(data.text, data.lines || []);
       ocr.beam.classList.remove('on');
       drawBoxes(data.words || [], im.w, im.h, fields);
       ocr.text.textContent = data.text.trim();
       ocr.conf.textContent = `${Math.round(data.confidence)}% confidence`;
       const found = Object.values(fields).filter(Boolean).length;
-      setProgress(1, `Done. Found ${found} of 6 fields${label ? ' in the ' + label : ''}.`);
+      const wordCount = (data.words || []).filter(w => w.confidence > 40).length;
+      setProgress(1, isBill
+        ? `Done. Found ${found} of 6 fields${label ? ' in the ' + label : ''}.`
+        : `This doesn't look like a bill or invoice. I read ${wordCount} words, but none of them were bill details. Try a clear photo of a printed bill, or the sample bill.`);
       await showFields(fields);
-      track('ocr-demo-run', `OCR demo: ${found}/6 fields (${label || 'own image'})`);
+      track('ocr-demo-run', `OCR demo: ${isBill ? found + '/6 fields' : 'not a bill'} (${label || 'own image'})`);
     } catch (err) {
       console.warn('OCR failed:', err);
       ocr.beam.classList.remove('on');
