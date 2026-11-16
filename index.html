@@ -353,6 +353,59 @@
     .fc-legend i { display: inline-block; width: 16px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
     .l-hist { background: var(--ink); } .l-fc { background: var(--rose); } .l-band { background: color-mix(in srgb, var(--lav) 45%, transparent); height: 10px !important; }
 
+    /* ---------- cinematic layer ---------- */
+    /* smooth scrolling (Lenis) */
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-stopped { overflow: hidden; }
+
+    /* intro screen */
+    .intro { position: fixed; inset: 0; z-index: 300; background: var(--bg); display: grid; place-items: center; text-align: center; clip-path: inset(0 0 0 0); transition: clip-path 1s cubic-bezier(.76, 0, .24, 1); }
+    .intro.out { clip-path: inset(0 0 100% 0); }
+    .intro-name { font: 400 clamp(56px, 11vw, 150px)/1 "Instrument Serif", serif; letter-spacing: -.02em; display: flex; justify-content: center; flex-wrap: wrap; }
+    .intro-name .gap { width: .28em; }
+    .intro-name span { display: inline-block; overflow: hidden; padding-bottom: .08em; }
+    .intro-name span i { display: inline-block; font-style: normal; transform: translateY(110%); animation: rise .9s cubic-bezier(.2, .8, .2, 1) forwards; }
+    .intro-name span.it i { font-style: italic; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .intro-sub { margin-top: 18px; font: 500 13px "JetBrains Mono", monospace; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); opacity: 0; animation: fadeUp .8s .7s forwards; }
+    .intro-count { position: absolute; right: clamp(20px, 5vw, 60px); bottom: clamp(20px, 5vw, 50px); font: 400 clamp(48px, 8vw, 96px)/1 "Instrument Serif", serif; color: var(--rose); }
+    .intro-bar { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: var(--grad); }
+    html.intro-on .hero h1 .ln span, html.intro-on .fade-up { animation-play-state: paused; }
+    html.intro-on body { overflow: hidden; }
+
+    /* custom cursor */
+    .cur-dot, .cur-ring { position: fixed; left: 0; top: 0; z-index: 400; pointer-events: none; border-radius: 50%; opacity: 0; transition: opacity .3s; }
+    .cur-dot { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; background: var(--rose); }
+    .cur-ring { width: 40px; height: 40px; margin: -20px 0 0 -20px; border: 1.5px solid var(--rose); display: grid; place-items: center; transition: opacity .3s, width .35s, height .35s, margin .35s, background .35s, border-color .35s; }
+    .cur-ring span { font: 600 11px "Manrope", sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--bg); opacity: 0; transition: opacity .2s; }
+    html.has-cursor .cur-dot, html.has-cursor .cur-ring { opacity: 1; }
+    html.has-cursor, html.has-cursor a, html.has-cursor button, html.has-cursor summary, html.has-cursor label { cursor: none; }
+    html.has-cursor input, html.has-cursor textarea, html.has-cursor select { cursor: text; }
+    .cur-ring.big { width: 74px; height: 74px; margin: -37px 0 0 -37px; background: color-mix(in srgb, var(--rose) 22%, transparent); border-color: transparent; }
+    .cur-ring.label { width: 92px; height: 92px; margin: -46px 0 0 -46px; background: var(--rose); border-color: transparent; }
+    .cur-ring.label span { opacity: 1; }
+    .cur-ring.down { transform: scale(.8); }
+
+    /* word-by-word heading reveal */
+    .wd { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .1em; margin-bottom: -.1em; }
+    .wd > span { display: inline-block; will-change: transform; }
+
+    /* horizontal projects (desktop) */
+    #projects.hscroll { padding: 90px 0 0; overflow: hidden; }
+    #projects.hscroll .wrap { width: 100%; max-width: none; padding-left: max(16px, calc((100vw - 1160px) / 2)); }
+    #projects.hscroll .label, #projects.hscroll h2, #projects.hscroll .sub { margin-right: 16px; }
+    #projects.hscroll h2 { margin-bottom: 10px; }
+    #projects.hscroll .stack-wrap { display: flex; gap: 36px; width: max-content; margin-top: 28px; padding-right: max(16px, calc((100vw - 1160px) / 2)); will-change: transform; }
+    #projects.hscroll .proj { position: relative; top: auto; flex: none; width: min(1040px, 80vw); min-height: 0; height: min(64vh, 540px); }
+    #projects.hscroll .proj-info { overflow: hidden; padding: clamp(22px, 3vw, 40px); gap: 10px; }
+    #projects.hscroll .proj-info h3 { font-size: clamp(28px, 3vw, 44px); }
+    #projects.hscroll .proj-info p { font-size: 15px; }
+    @media (max-height: 820px) { #projects.hscroll .proj-info p + p { display: none; } }
+    .h-meta { display: flex; align-items: center; gap: 18px; margin-top: 14px; font: 13px "JetBrains Mono", monospace; color: var(--muted); max-width: 1160px; }
+    .h-meta .h-bar { flex: 1; max-width: 360px; height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
+    .h-meta .h-bar i { display: block; height: 100%; width: 100%; background: var(--grad); transform-origin: left; transform: scaleX(0); }
+    .h-meta b { color: var(--ink); font-weight: 500; }
+
     /* case study */
     .cs-facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 40px 0 34px; }
     .cs-facts div { padding: 22px; border-radius: 22px; border: 1px solid var(--line); background: var(--card); }
@@ -536,6 +589,25 @@
   <script data-goatcounter="https://aparnaa.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
+  <script>
+    // show the intro once per visit; decided before first paint so the page never flashes
+    (() => {
+      let seen = false;
+      try { seen = sessionStorage.getItem('introSeen') === '1'; } catch (e) {}
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!seen && !still) document.documentElement.classList.add('intro-on');
+    })();
+  </script>
+  <div class="intro" id="intro" aria-hidden="true">
+    <div>
+      <div class="intro-name" id="introName"></div>
+      <div class="intro-sub">AI &amp; Backend Engineer</div>
+    </div>
+    <div class="intro-count" id="introCount">0</div>
+    <i class="intro-bar" id="introBar"></i>
+  </div>
+  <div class="cur-dot" id="curDot" aria-hidden="true"></div>
+  <div class="cur-ring" id="curRing" aria-hidden="true"><span></span></div>
   <div class="sky" aria-hidden="true"></div>
   <canvas id="net" aria-hidden="true"></canvas>
   <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
@@ -637,7 +709,7 @@
     <div class="wrap">
       <span class="label rv">Selected work</span>
       <h2 class="rv">Systems that <em class="grad-text">run every day.</em></h2>
-      <p class="sub rv">Scroll through the three I'm proudest of.</p>
+      <p class="sub rv">Five systems I'm proudest of.</p>
 
       <div class="stack-wrap">
         <article class="proj" style="--i:0">
@@ -1256,7 +1328,8 @@
     let cur = '';
     sections.forEach(s => { if (s.getBoundingClientRect().top < innerHeight * .4) cur = s.id; });
     navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
-    // word-by-word highlight
+    // word-by-word highlight (the cinematic layer takes this over when it pins the section)
+    if (window.__cineQuote) return;
     const q = $('#quote').getBoundingClientRect();
     const t = Math.min(1, Math.max(0, (innerHeight * .85 - q.top) / (q.height + innerHeight * .35)));
     words.forEach((w, i) => w.classList.toggle('on', i / words.length < t));
@@ -1867,6 +1940,194 @@
   const clock = $('#clock');
   const tick = () => clock.textContent = new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
   tick(); setInterval(tick, 1000);
+})();
+</script>
+
+<!-- cinematic layer: GSAP + ScrollTrigger for scroll-driven motion, Lenis for smooth scrolling -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+  const root = document.documentElement, $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(pointer: fine)').matches;
+  const hasGsap = !!(window.gsap && window.ScrollTrigger);
+
+  // ---- intro: the name rises letter by letter while a counter runs to 100, then the curtain lifts ----
+  const intro = $('#intro');
+  let introEnded = false;
+  const endIntro = () => {
+    if (introEnded) return;
+    introEnded = true;
+    try { sessionStorage.setItem('introSeen', '1'); } catch (e) {}
+    intro.classList.add('out');
+    root.classList.remove('intro-on');
+    setTimeout(() => intro.remove(), 1100);
+    window.dispatchEvent(new Event('intro:done'));
+  };
+  if (root.classList.contains('intro-on')) {
+    const name = $('#introName');
+    let html = '', k = 0;
+    [['Aparna', ''], ['Anand', 'it']].forEach(([word, cls], wi) => {
+      if (wi) html += '<span class="gap"></span>';
+      for (const ch of word) html += `<span class="${cls}"><i style="animation-delay:${(k++ * .045).toFixed(3)}s">${ch}</i></span>`;
+    });
+    name.innerHTML = html;
+    const count = $('#introCount'), bar = $('#introBar'), t0 = performance.now(), dur = 1500;
+    const step = t => {
+      const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      count.textContent = Math.round(e * 100);
+      bar.style.width = (e * 100) + '%';
+      if (p < 1) requestAnimationFrame(step); else setTimeout(endIntro, 250);
+    };
+    requestAnimationFrame(step);
+    setTimeout(endIntro, 4000); // never let the intro hold the page if frames are throttled
+  } else {
+    intro.remove();
+  }
+
+  // ---- custom cursor: a dot that follows exactly and a ring that trails, growing over things you can use ----
+  if (fine && !reduce) {
+    root.classList.add('has-cursor');
+    const dot = $('#curDot'), ring = $('#curRing'), label = ring.querySelector('span');
+    let x = innerWidth / 2, y = innerHeight / 2, rx = x, ry = y;
+    addEventListener('pointermove', e => { x = e.clientX; y = e.clientY; dot.style.transform = `translate(${x}px,${y}px)`; });
+    const loop = () => { rx += (x - rx) * .18; ry += (y - ry) * .18; ring.style.transform = `translate(${rx}px,${ry}px)`; requestAnimationFrame(loop); };
+    loop();
+    document.addEventListener('pointerover', e => {
+      const lab = e.target.closest('[data-cursor]');
+      const act = e.target.closest('a, button, summary, label, .tile, .cert, .gh-repo, .bk-day.open, .bk-slot, .ocr-drop');
+      ring.classList.toggle('label', !!lab);
+      ring.classList.toggle('big', !lab && !!act);
+      label.textContent = lab ? lab.dataset.cursor : '';
+    });
+    addEventListener('pointerdown', () => ring.classList.add('down'));
+    addEventListener('pointerup', () => ring.classList.remove('down'));
+    document.addEventListener('pointerleave', () => { dot.style.opacity = ring.style.opacity = 0; });
+    document.addEventListener('pointerenter', () => { dot.style.opacity = ring.style.opacity = ''; });
+  }
+
+  // move the "more work" tiles into their own section so the horizontal reel holds only the five stories
+  const grid = $('#grid'), projects = $('#projects');
+  if (grid && projects) {
+    const sec = document.createElement('section');
+    sec.id = 'more-work'; sec.style.paddingTop = '40px';
+    sec.innerHTML = '<div class="wrap"><span class="label">More things I\'ve built</span></div>';
+    sec.querySelector('.wrap').appendChild(grid);
+    grid.style.marginTop = '28px';
+    projects.after(sec);
+  }
+
+  if (!hasGsap || reduce) return; // everything below is motion; the page works fully without it
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ---- smooth scrolling ----
+  let lenis = null;
+  if (window.Lenis) {
+    lenis = new Lenis({ lerp: .09, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    if (root.classList.contains('intro-on')) { lenis.stop(); addEventListener('intro:done', () => lenis.start(), { once: true }); }
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const id = a.getAttribute('href');
+      const target = id === '#top' ? 0 : document.querySelector(id);
+      if (target === null) return;
+      e.preventDefault();
+      lenis.scrollTo(target, { offset: id === '#top' ? 0 : -70, duration: 1.4 });
+    });
+  }
+
+  // ---- headings rise word by word ----
+  $$('section h2').forEach(h => {
+    const parts = [];
+    [...h.childNodes].forEach(n => {
+      if (n.nodeType === 3) n.textContent.split(/(\s+)/).forEach(w => parts.push(/^\s+$/.test(w) ? w : w ? `<span class="wd"><span>${w}</span></span>` : ''));
+      else if (n.classList && n.classList.contains('twinkles')) parts.push(n.outerHTML);
+      else parts.push(`<span class="wd"><span>${n.outerHTML}</span></span>`);
+    });
+    h.innerHTML = parts.join('');
+    h.classList.remove('rv'); h.classList.add('in');
+    gsap.from(h.querySelectorAll('.wd > span'), {
+      yPercent: 115, rotate: 4, duration: 1.1, ease: 'expo.out', stagger: .07,
+      scrollTrigger: { trigger: h, start: 'top 88%' }
+    });
+  });
+
+  // ---- hero drifts away as you scroll: name lifts and fades, the live card lags behind ----
+  gsap.to('.hero .wrap > div:first-child', { yPercent: -18, opacity: .15, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.live-wrap', { y: 120, rotate: -2, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+  // ---- marquee reacts to scroll speed ----
+  const track = $('#track');
+  const marqueeAnim = track && track.getAnimations ? track.getAnimations()[0] : null;
+  if (lenis && track) lenis.on('scroll', ({ velocity }) => {
+    const v = Math.max(-30, Math.min(30, velocity));
+    gsap.to(track, { skewX: -v * .35, duration: .4, overwrite: 'auto' });
+    if (marqueeAnim) marqueeAnim.playbackRate = 1 + Math.min(6, Math.abs(v) * .25);
+  });
+
+  const mm = gsap.matchMedia();
+  mm.add('(min-width: 961px) and (min-height: 640px)', () => {
+    // ---- about: the section holds still while the statement lights up word by word ----
+    // (only when the whole section fits on screen, so nothing is hidden while it is held)
+    const words = $$('#quote .w');
+    if ($('#about .about').offsetHeight < innerHeight - 120) {
+      window.__cineQuote = true;
+      ScrollTrigger.create({
+        trigger: '#about .about', start: 'center center', end: '+=90%', pin: true, scrub: true,
+        onUpdate: self => words.forEach((w, i) => w.classList.toggle('on', i / words.length < self.progress * 1.15))
+      });
+    }
+
+    // ---- projects: a horizontal reel driven by vertical scroll ----
+    projects.classList.add('hscroll');
+    $$('#projects .label, #projects .sub').forEach(el => el.classList.add('in'));
+    const reel = $('#projects .stack-wrap'), cards = $$('#projects .proj');
+    cards.forEach(c => c.setAttribute('data-cursor', 'Scroll'));
+    const meta = document.createElement('div');
+    meta.className = 'h-meta';
+    meta.innerHTML = `<b id="hNow">01</b><span>/ ${String(cards.length).padStart(2, '0')}</span><span class="h-bar"><i id="hBar"></i></span><span>scroll to explore →</span>`;
+    $('#projects .sub').after(meta);
+    const dist = () => Math.max(0, reel.scrollWidth - innerWidth + parseFloat(getComputedStyle($('#projects .wrap')).paddingLeft));
+    const reelTween = gsap.to(reel, {
+      x: () => -dist(), ease: 'none',
+      scrollTrigger: {
+        trigger: '#projects', start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 1, invalidateOnRefresh: true, anticipatePin: 1,
+        onUpdate: self => {
+          $('#hBar').style.transform = `scaleX(${self.progress})`;
+          $('#hNow').textContent = String(Math.min(cards.length, Math.floor(self.progress * cards.length * .999) + 1)).padStart(2, '0');
+        }
+      }
+    });
+    // each story's picture settles into place as it slides in
+    cards.forEach(c => gsap.from(c.querySelector('.proj-visual > *'), {
+      scale: .82, rotate: -3, opacity: .3, ease: 'none',
+      scrollTrigger: { trigger: c, containerAnimation: reelTween, start: 'left right', end: 'center center', scrub: true }
+    }));
+
+    return () => {
+      window.__cineQuote = false;
+      projects.classList.remove('hscroll');
+      meta.remove();
+      cards.forEach(c => c.removeAttribute('data-cursor'));
+    };
+  });
+
+  // ---- case-study cards and certificate notes fan in ----
+  const fanIn = $$('.cs-card, .cert, .tile');
+  fanIn.forEach(el => el.classList.remove('rv', 'd1', 'd2', 'd3'));
+  gsap.set(fanIn, { y: 60, opacity: 0, rotateX: -12, transformPerspective: 900 });
+  ScrollTrigger.batch(fanIn, {
+    start: 'top 92%',
+    onEnter: els => gsap.to(els, { y: 0, opacity: 1, rotateX: 0, duration: .9, ease: 'power3.out', stagger: .08, overwrite: true })
+  });
+
+  addEventListener('intro:done', () => ScrollTrigger.refresh());
+  addEventListener('load', () => ScrollTrigger.refresh());
 })();
 </script>
 </body>
