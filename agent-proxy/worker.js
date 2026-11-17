@@ -52,7 +52,12 @@ export default {
     const models = [env.MODEL || DEFAULT_MODEL, ...FALLBACK_MODELS.filter(m => m !== (env.MODEL || DEFAULT_MODEL))];
     let status = 502, text = JSON.stringify({ error: 'no model answered' });
     for (const model of models) {
-      const upstream = await fetch(GEMINI_URL, {
+      // give each model 12 s; a stuck model moves us on to the next one
+      const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 12_000);
+      let upstream;
+      try {
+        upstream = await fetch(GEMINI_URL, {
+        signal: ctrl.signal,
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.GEMINI_API_KEY}` },
         body: JSON.stringify({
@@ -63,7 +68,11 @@ export default {
           temperature: typeof body.temperature === 'number' ? Math.min(1, Math.max(0, body.temperature)) : 0.4,
           max_tokens: 700
         })
-      });
+        });
+      } catch (e) {
+        status = 504; text = JSON.stringify({ error: `${model} timed out` });
+        continue;
+      } finally { clearTimeout(timer); }
       status = upstream.status;
       text = await upstream.text();
       if (![404, 429, 500, 503].includes(status)) break;   // success, or an error another model won't fix
