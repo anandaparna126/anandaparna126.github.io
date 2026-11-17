@@ -2123,7 +2123,7 @@
   // =====================================================================================
   // Paste the Cloudflare Worker URL here (see agent-proxy/worker.js) to answer with Gemini and no wait.
   // Left empty, the agent uses Pollinations' free tier (one reply per ~45 s per visitor).
-  const AGENT_PROXY = '';
+  const AGENT_PROXY = 'https://aparna-agent.anandaparna1203.workers.dev';
   const AGENT_LLM = AGENT_PROXY || 'https://text.pollinations.ai/openai';
   if (AGENT_PROXY) { const note = document.querySelector('.chat-note'); if (note) note.textContent = 'Replies come from Google Gemini. Please don\'t share anything sensitive. Emails and bookings always wait for your confirmation.'; }
   const KB = [

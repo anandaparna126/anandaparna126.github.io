@@ -8,6 +8,8 @@
 
 const DEFAULT_ORIGINS = 'https://anandaparna126.github.io';
 const DEFAULT_MODEL = 'gemini-flash-latest';
+// tried in order when a model is busy (503), rate-limited (429) or not available (404)
+const FALLBACK_MODELS = ['gemini-flash-lite-latest', 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions';
 const MAX_BODY = 40_000;          // bytes
 const MAX_MESSAGES = 30;
@@ -47,19 +49,25 @@ export default {
     try { body = JSON.parse(raw); } catch (e) { return reply(400, { error: 'bad JSON' }); }
     if (!Array.isArray(body.messages) || !body.messages.length || body.messages.length > MAX_MESSAGES) return reply(400, { error: 'bad messages' });
 
-    const upstream = await fetch(GEMINI_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.GEMINI_API_KEY}` },
-      body: JSON.stringify({
-        model: env.MODEL || DEFAULT_MODEL,
-        messages: body.messages,
-        tools: Array.isArray(body.tools) ? body.tools.slice(0, 12) : undefined,
-        tool_choice: body.tools ? 'auto' : undefined,
-        temperature: typeof body.temperature === 'number' ? Math.min(1, Math.max(0, body.temperature)) : 0.4,
-        max_tokens: 700
-      })
-    });
-    const text = await upstream.text();
-    return new Response(text, { status: upstream.status, headers: { ...cors, 'Content-Type': 'application/json' } });
+    const models = [env.MODEL || DEFAULT_MODEL, ...FALLBACK_MODELS.filter(m => m !== (env.MODEL || DEFAULT_MODEL))];
+    let status = 502, text = JSON.stringify({ error: 'no model answered' });
+    for (const model of models) {
+      const upstream = await fetch(GEMINI_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.GEMINI_API_KEY}` },
+        body: JSON.stringify({
+          model,
+          messages: body.messages,
+          tools: Array.isArray(body.tools) && body.tools.length ? body.tools.slice(0, 12) : undefined,
+          tool_choice: Array.isArray(body.tools) && body.tools.length ? 'auto' : undefined,
+          temperature: typeof body.temperature === 'number' ? Math.min(1, Math.max(0, body.temperature)) : 0.4,
+          max_tokens: 700
+        })
+      });
+      status = upstream.status;
+      text = await upstream.text();
+      if (![404, 429, 500, 503].includes(status)) break;   // success, or an error another model won't fix
+    }
+    return new Response(text, { status, headers: { ...cors, 'Content-Type': 'application/json' } });
   }
 };
