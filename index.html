@@ -2121,7 +2121,11 @@
   // OpenAI-compatible, no key) with a built-in rule-based planner when the model is unreachable.
   // Side effects (email, booking) always stop at a confirmation card the visitor must press.
   // =====================================================================================
-  const AGENT_LLM = 'https://text.pollinations.ai/openai';
+  // Paste the Cloudflare Worker URL here (see agent-proxy/worker.js) to answer with Gemini and no wait.
+  // Left empty, the agent uses Pollinations' free tier (one reply per ~45 s per visitor).
+  const AGENT_PROXY = '';
+  const AGENT_LLM = AGENT_PROXY || 'https://text.pollinations.ai/openai';
+  if (AGENT_PROXY) { const note = document.querySelector('.chat-note'); if (note) note.textContent = 'Replies come from Google Gemini. Please don\'t share anything sensitive. Emails and bookings always wait for your confirmation.'; }
   const KB = [
     { t: 'Summary', x: 'Aparna Anand is an AI and backend engineer in Bhopal, India. She is an AI Developer at Virtuon AI (since July 2024) and is studying for an M.Tech in Artificial Intelligence at MANIT Bhopal (2024 to 2026, current CGPA 8.5). She builds Django backends and production AI: RAG chatbots, agentic calling systems and OCR. She graduated in B.Tech CSE (AI) from SAGE University with a Silver Medal.' },
     { t: 'Open to work', x: 'Aparna is open to AI engineer and backend engineer roles where she can own systems end to end, and to interesting projects. The best ways to reach her are this agent (it can send her a message or book a 30-minute call), the project form on this page, or email anandaparna1203@gmail.com.' },
@@ -2426,13 +2430,15 @@ Rules:
   // and the page runs those tools and shows their results itself. Follow-up questions for missing
   // details (name, email, time) are handled by the built-in planner, with no further model calls.
   let history = [], llmReadyAt = 0;
-  const LLM_GAP = 46000;
+  const LLM_GAP = AGENT_PROXY ? 0 : 46000;
   const callLLM = async messages => {
     if (Date.now() < llmReadyAt) throw new Error('cooldown');
     llmReadyAt = Date.now() + LLM_GAP;
     const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 35000);
     try {
-      const r = await fetch(AGENT_LLM, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'openai', messages, tools: PLAN_TOOLS, tool_choice: 'auto', temperature: .4, referrer: 'anandaparna126.github.io' }), signal: ctrl.signal });
+      const r = await fetch(AGENT_LLM, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(AGENT_PROXY
+        ? { messages, tools: PLAN_TOOLS, temperature: .4 }
+        : { model: 'openai', messages, tools: PLAN_TOOLS, tool_choice: 'auto', temperature: .4, referrer: 'anandaparna126.github.io' }), signal: ctrl.signal });
       if (!r.ok) {
         const wait = ((await r.text()).match(/retry after (\d+)\s*s/i) || [])[1];
         if (wait) llmReadyAt = Date.now() + (+wait + 1) * 1000;
