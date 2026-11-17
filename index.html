@@ -2337,6 +2337,8 @@
     const a = { ...args }, typedEmail = findEmail(lastUserText), typedName = findName(lastUserText);
     if (typedEmail) a.email = typedEmail;
     if (typedName) a.name = typedName;
+    // keep a call topic only if the visitor actually mentioned it
+    if (a.topic && !toks(a.topic).some(w => toks(lastUserText).includes(w))) a.topic = '';
     if (a.message) {
       a.message = String(a.message)
         .replace(/^\s*(?:please\s+)?(?:send|write|drop|tell)\s+(?:aparna|her)\s+(?:an?\s+)?(?:quick\s+)?(?:e-?mail|mail|message|msg|note)?\s*(?:saying|that|:)?\s*/i, '')
