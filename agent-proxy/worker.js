@@ -6,7 +6,7 @@
 //   ALLOWED_ORIGINS  comma-separated sites allowed to call this proxy  (optional)
 //   MODEL            Gemini model id                                   (optional)
 
-const DEFAULT_ORIGINS = 'https://anandaparna126.github.io';
+const DEFAULT_ORIGINS = 'https://anandaparna126.github.io,https://aparnaanand.tech,https://www.aparnaanand.tech';
 const DEFAULT_MODEL = 'gemini-flash-latest';
 // tried in order when a model is busy (503), rate-limited (429) or not available (404)
 const FALLBACK_MODELS = ['gemini-flash-lite-latest', 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];

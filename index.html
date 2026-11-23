@@ -634,7 +634,7 @@
       .nav-links { display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; padding: 10px; border-radius: 22px; background: var(--bg); border: 1px solid var(--line); }
       .nav-links.open { display: flex; }
       .burger { display: grid; }
-      .hero .wrap, .about, .tests, .proj, .edu, .talk, .career { grid-template-columns: 1fr; }
+      .hero .wrap, .about, .tests, .proj, .edu, .talk, .career { grid-template-columns: minmax(0, 1fr); }
       .career-side { position: static; }
       .career-steps { display: none; }
       .chap-groups { grid-template-columns: 1fr; }
@@ -668,6 +668,7 @@
       .gh-top { grid-template-columns: 1fr 1fr; }
       .now-list li { grid-template-columns: 1fr; gap: 4px; }
       .cs-facts b { font-size: 38px; }
+      .mail { max-width: 100%; padding: 16px 22px; overflow-wrap: anywhere; }
       .cert.wide { grid-column: auto; }
       .counters { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
       .counter { padding: 14px; } .counter b { font-size: 34px; }
@@ -882,7 +883,7 @@
     <div class="wrap">
       <span class="label rv">Selected work</span>
       <h2 class="rv">Systems that <em class="grad-text">run every day.</em></h2>
-      <p class="sub rv">Five systems I'm proudest of.</p>
+      <p class="sub rv">Six systems I'm proudest of.</p>
 
       <div class="stack-wrap">
         <article class="proj" style="--i:0">
@@ -918,7 +919,30 @@
 
         <article class="proj" style="--i:1">
           <div class="proj-info">
-            <span class="num">02 / Agentic AI</span>
+            <span class="num">02 / Healthcare billing</span>
+            <h3>Apollo Sage Bill Summarizer</h3>
+            <a class="go-btn" href="http://apollo-sage.122.169.32.119.nip.io:3100/" target="_blank" rel="noopener" data-goatcounter-click="apollo-workspace" data-goatcounter-title="Apollo Sage bill workspace opened">Open the live workspace <span>↗</span><small>sign-in required</small></a>
+            <p>Built for Apollo Sage Hospital. A 63-page hospital bill becomes an 8-page summary you can trust (907 lines down to 245), with no AI guessing: every sub-total, page number and serial number is checked against the bill before a summary is released.</p>
+            <p>It runs as a multi-tenant SaaS with a Super Admin console: pricing plans and quotas, per-company feature flags, staged engine releases tested on anonymised bills, isolated job workers with Grafana metrics, and an append-only audit log.</p>
+            <div class="chips"><span>Next.js</span><span>Multi-tenant SaaS</span><span>Verification engine</span><span>Audit log</span><span>Grafana</span></div>
+          </div>
+          <div class="proj-visual">
+            <div class="scan">
+              <div class="beam"></div>
+              <strong>hospital_bill.pdf</strong>
+              <div class="ln" style="width:90%"></div>
+              <div class="hit" data-hit><span>Pages</span><span>63 → 8</span></div>
+              <div class="hit" data-hit><span>Line items</span><span>907 → 245</span></div>
+              <div class="ln" style="width:70%"></div>
+              <div class="hit" data-hit><span>Checks passed</span><span>79 / 79</span></div>
+              <div class="answer">Summary released: every sub-total, page and serial number matches the bill.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj" style="--i:2">
+          <div class="proj-info">
+            <span class="num">03 / Agentic AI</span>
             <h3>Agentic Calling and WhatsApp System</h3>
             <p>Built for SAGE Group. AI agents hold real conversations over voice calls (VCall) and WhatsApp, and use tool calling to look up and update records in the CRM and other internal apps.</p>
             <div class="chips"><span>AI agents</span><span>Tool calling</span><span>WhatsApp Cloud API</span><span>ElevenLabs</span></div>
@@ -931,11 +955,10 @@
           </div>
         </article>
 
-        <article class="proj" style="--i:2">
+        <article class="proj" style="--i:3">
           <div class="proj-info">
-            <span class="num">03 / Healthcare AI</span>
+            <span class="num">04 / Healthcare AI</span>
             <h3>CurAyu, AI Health Assistant</h3>
-            <a class="go-btn" href="https://play.google.com/store/apps/details?id=com.virtuonai.curayu" target="_blank" rel="noopener" data-goatcounter-click="curayu-playstore" data-goatcounter-title="CurAyu Play Store opened"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M4 2.6c-.3.3-.4.7-.4 1.2v16.4c0 .5.1.9.4 1.2l9.2-9.4zm10.6 7.6L6.1 1.4 16.9 7.6zm3.6 2c.7.4.7 1.2 0 1.6l-2.6 1.5-2.6-2.7 2.6-2.7zM6.1 22.6l10.8-6.2-2.3-2.4z"/></svg>Get it on Google Play <span>↗</span></a>
             <p>I built the AI that reads medical reports and explains them in plain words, using a fine-tuned LLM pipeline. People can then ask follow-up questions about their own results.</p>
             <div class="chips"><span>LLMs</span><span>Fine-tuning</span><span>Gemini</span><span>Python</span></div>
           </div>
@@ -953,9 +976,9 @@
           </div>
         </article>
 
-        <article class="proj" style="--i:3">
+        <article class="proj" style="--i:4">
           <div class="proj-info">
-            <span class="num">04 / Computer vision</span>
+            <span class="num">05 / Computer vision</span>
             <h3>Pics Picker</h3>
             <p>Hundreds of event photos, and you only want the ones you're in. Pics Picker groups photos person-wise and finds every photo of someone from a single reference picture.</p>
             <p>It turns each face into an embedding, clusters similar faces together and matches the reference face against every cluster.</p>
@@ -970,9 +993,9 @@
           </div>
         </article>
 
-        <article class="proj" style="--i:4">
+        <article class="proj" style="--i:5">
           <div class="proj-info">
-            <span class="num">05 / Forecasting</span>
+            <span class="num">06 / Forecasting</span>
             <h3>SARIMA Price Forecasting</h3>
             <p>Time-series models that forecast property prices and stock market trends, built with SARIMA alongside regression and clustering.</p>
             <p>The forecasts fed a pricing model for business use, so decisions could be based on where prices are heading, not only where they are today.</p>
@@ -1244,7 +1267,7 @@
       <div class="edu">
         <div class="edu-card rv">
           <div class="dial" data-p="85"><b>8.5<small>CGPA</small></b></div>
-          <div><span class="yrs">2024 – 2026</span><h4>M.Tech in Artificial Intelligence</h4><p>MANIT Bhopal, alongside full-time work</p></div>
+          <div><span class="yrs">2024 – 2027</span><h4>M.Tech in Artificial Intelligence</h4><p>MANIT Bhopal, alongside full-time work</p></div>
         </div>
         <div class="edu-card rv d1">
           <div class="dial" data-p="92"><b>9.24<small>CGPA</small></b></div>
@@ -1332,7 +1355,6 @@
         <a class="btn magnetic" href="https://www.linkedin.com/in/aparna-anand-067697227/" target="_blank" rel="noopener" data-goatcounter-click="linkedin-click" data-goatcounter-title="LinkedIn opened">LinkedIn</a>
         <a class="btn magnetic" href="https://github.com/anandaparna126" target="_blank" rel="noopener" data-goatcounter-click="github-click" data-goatcounter-title="GitHub opened">GitHub</a>
         <a class="btn magnetic" href="https://x.com/anand_apar9601" target="_blank" rel="noopener">X</a>
-        <a class="btn magnetic" href="blog/index.html">Blog</a>
         <a class="btn magnetic" href="resume/Aparna_Anand_Resume.pdf" target="_blank" rel="noopener" data-goatcounter-click="resume-download" data-goatcounter-title="Resume opened (contact)">Resume</a>
       </div>
     </div>
@@ -1663,9 +1685,8 @@
     ['AI Battery Pricing Tool', 'Gemini acts as a commodity pricing analyst and returns a validated price for battery scrap.', 'Django · Gemini API'],
     ['Personalised AI Agent', 'Remembers user preferences, on an open-source LLM fine-tuned on domain data.', 'Fine-tuning · LangChain'],
     ['Face Attendance System', 'Face recognition attendance, deployed for enterprise use.', 'OpenCV · Face embeddings'],
-    ['AI Assignment Solver', 'Solves assignment questions from Word, Python, Excel and CSV files using Gemini.', 'Gemini · Streamlit', 'https://ai-assignment-solver.streamlit.app/', 'Open the app ↗'],
+    ['AI Assignment Solver', 'Solves assignment questions from Word, Python, Excel and CSV files using Gemini.', 'Gemini · Streamlit'],
     ['Thyroid Disease Detection', 'A deep learning model with 98.94% accuracy, built at iNeuron.', 'Deep learning'],
-    ['Data Science Notebooks', 'Room occupancy detection, diabetes prediction, crime forecasting with neural networks, and more.', 'Pandas · Scikit-learn', 'blog/index.html', 'Read the blog →']
   ];
   const grid = $('#grid');
   grid.innerHTML = more.map(([t, d, m, href, lt], i) => `<div class="tile rv d${i % 3}"><h4>${t}</h4><p>${d}</p><div class="meta">${m}</div>${href ? `<a href="${href}"${href.startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>${lt}</a>` : ''}</div>`).join('');
@@ -2127,28 +2148,29 @@
   const AGENT_LLM = AGENT_PROXY || 'https://text.pollinations.ai/openai';
   if (AGENT_PROXY) { const note = document.querySelector('.chat-note'); if (note) note.textContent = 'Replies come from Google Gemini. Please don\'t share anything sensitive. Emails and bookings always wait for your confirmation.'; }
   const KB = [
-    { t: 'Summary', x: 'Aparna Anand is an AI and backend engineer in Bhopal, India. She is an AI Developer at Virtuon AI (since July 2024) and is studying for an M.Tech in Artificial Intelligence at MANIT Bhopal (2024 to 2026, current CGPA 8.5). She builds Django backends and production AI: RAG chatbots, agentic calling systems and OCR. She graduated in B.Tech CSE (AI) from SAGE University with a Silver Medal.' },
+    { t: 'Summary', x: 'Aparna Anand is an AI and backend engineer in Bhopal, India. She is an AI Developer at Virtuon AI (since July 2024) and is studying for an M.Tech in Artificial Intelligence at MANIT Bhopal alongside her job (July 2024 to June 2027, current CGPA 8.5). She has 2+ years of experience shipping production AI and backend systems (internships from August 2023, full time since July 2024). She builds Django backends and production AI: RAG chatbots, agentic calling systems and OCR. She graduated in B.Tech CSE (AI) from SAGE University with a Silver Medal.' },
     { t: 'Open to work', x: 'Aparna is open to AI engineer and backend engineer roles where she can own systems end to end, and to interesting projects. The best ways to reach her are this agent (it can send her a message or book a 30-minute call), the project form on this page, or email anandaparna1203@gmail.com.' },
     { t: 'Experience: AI Developer at Virtuon AI', x: 'July 2024 to present, Bhopal, full time. She built the whole backend of the ReBAT ERP in Django and DRF (420 data models, 600+ REST APIs, 97 automated tests); a payroll engine with configurable loss-of-pay rules, pay cycles, statutory deductions and a test-run mode; integrations with Tally, eSSL biometric devices and Google sign-in; an agentic calling and WhatsApp system for SAGE Group; RAG chatbots with LangChain and FAISS; the AI behind CurAyu; and bill OCR with 85% field accuracy on 1,000+ images. She deploys on GCP and Docker with Weave tracing, Locust load tests and Grafana monitoring.' },
     { t: 'Experience: Junior AI Developer intern at Virtuon AI', x: 'January to June 2024. She built and deployed a face-recognition attendance system for enterprise use, and cut image processing time by 50% with pipelines using Hugging Face, OpenCV, TensorFlow and Gemini 1.5 Flash.' },
     { t: 'Experience: ML Engineer intern at iNeuron', x: 'August to September 2023 at iNeuron Intelligence. She built a deep learning model for thyroid disease detection with 98.94% accuracy and raised performance by 4% through tuning.' },
     { t: 'Project: ReBAT ERP backend', x: 'A battery recycling company runs HR, payroll, recruitment, procurement (indent, PO, GRN, quality check, payment), stores and travel on the Django backend Aparna built: 420 data models, 600+ REST APIs, 97 automated tests, 340+ commits. Payroll rules are editable by HR, with a Testing Mode run before real payroll. It syncs purchase orders, GRNs, payments and payroll to Tally, pulls attendance from eSSL biometric devices, has configurable approval chains, role-based permissions and an audit trail. The live workspace is at https://workspace.virtuonai.com (sign-in required).' },
+    { t: 'Project: Apollo Sage bill summarizer', x: 'A bill summarization platform Aparna built for Apollo Sage Hospital. It turns long hospital bills (PDF, Excel or CSV) into short summaries with no AI guessing: a 63-page bill becomes an 8-page summary (907 lines down to 245), and every sub-total, page number and serial number is checked against the bill before a summary is released (79 of 79 checks passed on that bill). It is a multi-tenant SaaS with a Next.js web app and a Super Admin console: Starter, Professional and Enterprise plans with quotas, per-company feature flags, staged engine releases gated by a regression suite of anonymised bills, isolated job workers with Grafana metrics, two-factor sign-in, an append-only audit log enforced by a database trigger, and data stored in India. The live workspace is at http://apollo-sage.122.169.32.119.nip.io:3100 (sign-in required).' },
     { t: 'Project: Agentic calling and WhatsApp system', x: 'Built for SAGE Group. AI agents hold real conversations over voice calls (VCall) and WhatsApp and use tool calling to look up and update records in the CRM and other internal apps. Tech: agentic AI, tool calling, Meta WhatsApp Cloud API, ElevenLabs voice.' },
     { t: 'Project: RAG chatbots', x: 'Aparna builds retrieval-augmented generation (RAG) chatbots with LangChain and FAISS that answer questions from company documents and cite their sources, including an internal support bot. This agent itself uses retrieval over her profile.' },
-    { t: 'Project: CurAyu AI health assistant', x: 'Aparna built the AI behind CurAyu, which reads medical reports and explains them in plain words using a fine-tuned LLM pipeline, so people can ask follow-up questions about their own results. It is on Google Play: https://play.google.com/store/apps/details?id=com.virtuonai.curayu' },
+    { t: 'Project: CurAyu AI health assistant', x: 'Aparna built the AI behind CurAyu, which reads medical reports and explains them in plain words using a fine-tuned LLM pipeline, so people can ask follow-up questions about their own results.' },
     { t: 'Project: Bill and invoice OCR', x: 'OCR for bills and invoices with Tesseract, OpenCV and Gemini; the Gemini and LangChain version reached 85% field accuracy on 1,000+ real images. A live in-browser demo is on this page (Read a bill in seconds).' },
     { t: 'Project: Pics Picker', x: 'Groups event photos person-wise and finds every photo of someone from one reference picture, using face embeddings and clustering.' },
     { t: 'Project: SARIMA price forecasting', x: 'Time-series models (SARIMA with regression and clustering) that forecast property prices and stock trends and feed a pricing model for business use.' },
     { t: 'Project: AI battery pricing tool', x: 'A Django tool where Gemini acts as a commodity pricing analyst and returns a validated price for battery scrap.' },
     { t: 'Project: Personalised AI agent', x: 'An agent with memory of user preferences, on an open-source LLM fine-tuned on domain data.' },
-    { t: 'Other projects', x: 'AI Assignment Solver (Gemini, Streamlit, https://ai-assignment-solver.streamlit.app/), thyroid disease detection (98.94% accuracy), and data science notebooks on her blog (room occupancy, diabetes prediction, crime forecasting).' },
+    { t: 'Other projects', x: 'AI Assignment Solver (Gemini, Streamlit), thyroid disease detection (98.94% accuracy).' },
     { t: 'Skills', x: 'GenAI: LangChain, RAG, AI agents, tool calling, multi-agent workflows, fine-tuning, prompt engineering, Gemini (Vertex AI), Hugging Face, FAISS, N8n. Backend: Python, SQL, Django, Django REST Framework, REST APIs, PostgreSQL, MySQL, Firebase. ML: PyTorch, TensorFlow, Scikit-learn, Pandas, NumPy, SARIMA. Vision: OpenCV, Tesseract, face embeddings. Testing and DevOps: Django unit and API tests, Locust, Weave, Grafana, GCP, AWS, Docker, Git. Integrations: Tally ERP, eSSL biometric, Google Workspace APIs, WhatsApp Cloud API, ElevenLabs.' },
-    { t: 'Education', x: 'M.Tech in Artificial Intelligence at MANIT (Maulana Azad National Institute of Technology) Bhopal, 2024 to 2026, current CGPA 8.5. B.Tech in Computer Science (AI specialisation) at SAGE University Bhopal, 2020 to 2024, CGPA 9.24, University Silver Medal.' },
+    { t: 'Education', x: 'M.Tech in Artificial Intelligence at MANIT (Maulana Azad National Institute of Technology) Bhopal, July 2024 to June 2027, studying alongside full-time work, current CGPA 8.5. B.Tech in Computer Science (AI specialisation) at SAGE University Bhopal, 2020 to 2024, CGPA 9.24, University Silver Medal.' },
     { t: 'Certifications and honours', x: 'Machine Learning Specialization by Stanford and DeepLearning.AI with Andrew Ng (May 2024). NPTEL Elite: Mobile Virtual Reality and AI (IIT Mandi, 84%), Research Methodology (IIT Madras, 75%), Developing Soft Skills and Personality (IIT Kanpur, 83%). NPTEL Programming with Generative AI (IISc Bangalore). IEEE CCET 2022 organizing committee member and poster presenter on AI. University Silver Medal.' },
     { t: 'How she works', x: 'She tests before she ships: 97 automated tests on the ERP, self-test scripts for HR flows, load tests with Locust, LLM tracing with Weave, monitoring with Grafana, and a full database backup before risky changes.' },
-    { t: 'Contact and links', x: 'Email: anandaparna1203@gmail.com. LinkedIn: https://www.linkedin.com/in/aparna-anand-067697227/. GitHub: https://github.com/anandaparna126 (53 public repositories). Resume: on this site. Portfolio: https://anandaparna126.github.io' },
+    { t: 'Contact and links', x: 'Email: anandaparna1203@gmail.com. LinkedIn: https://www.linkedin.com/in/aparna-anand-067697227/. GitHub: https://github.com/anandaparna126 (live stats are in the GitHub section of this page). Resume: on this site, and the agent can open it. Portfolio: https://anandaparna126.github.io. This agent does not give out her phone number: visitors can email her, send her a message through this agent or book a call.' },
     { t: 'Calls and availability', x: 'Calls are 30 minutes, on weekdays (Monday to Friday) between 10:00 am and 6:00 pm India time (IST), from 12 hours ahead up to 6 weeks ahead. Aparna confirms every booking by email with a meeting link.' },
-    { t: 'About this agent', x: 'This agent was built by Aparna as a live demo. It retrieves facts from her profile (RAG), plans with an LLM through Pollinations, and uses tools: search_profile, check_slots, book_call, send_message, open_resume, go_to, set_theme, try_ocr and github_activity. Emails and bookings wait for the visitor to confirm. If the model is unreachable, a built-in planner takes over.' }
+    { t: 'About this agent', x: 'This agent was built by Aparna as a live demo. It answers only from her profile notes, replies through Google Gemini via a small Cloudflare Worker proxy, and uses tools: search_profile, check_slots, book_call, send_message, open_resume, go_to, set_theme, try_ocr and github_activity. Emails and bookings wait for the visitor to confirm. If the model is unreachable, a built-in planner takes over.' }
   ];
   const STOP = new Set('a an the is are was were be been has have had to of in on for and or with at by from about as also any some me my you your i it its this that there their they them what which who whom how do does did done can could would should will please tell show give her hers she aparna anand aparnas build built builds building made make makes work works worked use used using ke ki ka ko hai hain mein me se kya kaun bare baare batao btao bataye kuch'.split(' '));
   const toks = s => (s.toLowerCase().match(/[a-z0-9+#]+/g) || []).filter(w => w.length > 1 && !STOP.has(w));
@@ -2413,19 +2435,39 @@
     S('try_ocr', 'Scroll to the live bill OCR demo and run it on the sample bill.'),
     S('github_activity', 'Get Aparna\'s live GitHub stats and most recently updated repositories.')
   ];
+  // The whole profile (a few thousand characters) goes with every turn, so the model never has to
+  // answer about Aparna without her facts in front of it.
+  const PROFILE_TEXT = KB.map(c => `# ${c.t}\n${c.x}`).join('\n\n');
+  // Last line of defence: a reply that states a number, link or email that appears nowhere in the
+  // profile, the prompt or the conversation was made up, so it is never shown.
+  const numsIn = v => (String(v).match(/\d+(?:[.,]\d+)*/g) || []).map(x => x.replace(/,/g, ''));
+  const linksIn = v => (String(v).match(/https?:\/\/[^\s)\]>]+|[\w.+-]+@[\w-]+(?:\.[\w-]+)+/gi) || []).map(x => x.toLowerCase().replace(/[.,;:!?]+$/, '').replace(/\/$/, ''));
+  const ungrounded = (answer, source) => {
+    const okNums = new Set(numsIn(source)), src = source.toLowerCase();
+    return numsIn(answer).find(x => !okNums.has(x) && !/^[1-9]$/.test(x)) || linksIn(answer).find(l => !src.includes(l)) || null;
+  };
   const systemPrompt = () => {
     const n = istNow();
     return `You are the AI agent on Aparna Anand's portfolio website. Visitors are recruiters, clients and engineers.
 Today is ${fmtDay(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate())} ${n.getUTCFullYear()}, ${fmtTime(n.getUTCHours(), n.getUTCMinutes())} IST.
-Rules:
+Everything you know about Aparna is in the PROFILE at the end. It is complete: if something is not written there, you do not know it.
+Rules for facts (the most important rules):
+- Answer questions about Aparna only from the PROFILE or from tool results. Never use outside knowledge about her, never guess, and never fill gaps with typical or likely details.
+- Never add employers, schools, dates, numbers, skills, tools, links, awards, personality traits, opinions or plans that the PROFILE does not state. Copy her numbers, dates and names exactly as written.
+- If the PROFILE does not answer the question (for example salary, notice period, age, schooling before her B.Tech, spoken languages, relocation, family or personal life, strengths or weaknesses, hobbies), say plainly that it isn't in her profile and offer to send Aparna the question. Call send_message only after the visitor says yes or asks to contact her.
+- If asked about a skill, tool or technology that the PROFILE does not list, say it isn't listed in her profile. Do not say she knows it, and do not say she doesn't.
+- If a question is only partly covered, answer the covered part and say which part isn't in her profile.
+Other rules:
 - Talk about Aparna in the third person (she/her). Be warm, clear and brief: at most about 90 words unless asked for detail.
 - Reply in the visitor's language and style (English, Hindi or Hinglish).
-- Use only facts from the profile context or from tools. Never invent numbers, employers, dates or links. If you don't know, say so and offer to send Aparna a message.
 - To act, call a tool. For book_call and send_message, collect every required field first (ask for anything missing, one short question at a time). Never make up the visitor's name or email.
 - Calls: 30 minutes, weekdays 10:00 am to 6:00 pm IST, 12 hours to 6 weeks ahead. If the visitor already gave a date and time, call book_call directly with whatever name and email they gave (the page asks for anything missing). Use check_slots only when they have not picked a time.
 - If the visitor wants to message, email or contact Aparna, call send_message with whatever details they gave.
 - After book_call or send_message returns confirmation_card_shown, tell the visitor to press Confirm on the card. Do not say it is sent yet.
-- Do not use markdown headings or tables. Short bullet lists are fine.`;
+- Do not use markdown headings or tables. Short bullet lists are fine.
+
+PROFILE
+${PROFILE_TEXT}`;
   };
   // The free model tier allows one reply every ~45 s per visitor, so each turn makes exactly one model
   // call: the profile notes ride along with the question, the model either answers or picks tools,
@@ -2439,8 +2481,8 @@ Rules:
     const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 35000);
     try {
       const r = await fetch(AGENT_LLM, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(AGENT_PROXY
-        ? { messages, tools: PLAN_TOOLS, temperature: .4 }
-        : { model: 'openai', messages, tools: PLAN_TOOLS, tool_choice: 'auto', temperature: .4, referrer: 'anandaparna126.github.io' }), signal: ctrl.signal });
+        ? { messages, tools: PLAN_TOOLS, temperature: .1 }
+        : { model: 'openai', messages, tools: PLAN_TOOLS, tool_choice: 'auto', temperature: .1, referrer: 'anandaparna126.github.io' }), signal: ctrl.signal });
       if (!r.ok) {
         const wait = ((await r.text()).match(/retry after (\d+)\s*s/i) || [])[1];
         if (wait) llmReadyAt = Date.now() + (+wait + 1) * 1000;
@@ -2486,15 +2528,16 @@ Rules:
   const llmTurn = async text => {
     const ctx = retrieve(text, 5);
     if (ctx.length) trace(`retrieved ${ctx.length} profile notes`);
-    const msgs = [
-      { role: 'system', content: systemPrompt() },
-      ...history.slice(-10),
-      { role: 'user', content: ctx.length ? `${text}\n\n[Profile context, already retrieved for you]\n${ctx.map(c => `# ${c.t}\n${c.x}`).join('\n\n')}` : text }
-    ];
+    const sys = systemPrompt();
+    const msgs = [{ role: 'system', content: sys }, ...history.slice(-10), { role: 'user', content: text }];
     trace('planning with the language model');
     const m = await callLLM(msgs);
     const calls = (m.tool_calls || []).slice(0, 2), said = (m.content || '').trim();
     if (!said && !calls.length) throw new Error('no answer');
+    if (said && !calls.length) {
+      const bad = ungrounded(said, [sys, text, ...history.map(h => h.content)].join('\n'));
+      if (bad) { trace(`the model mentioned "${bad}", which is not in her profile, so answering from the profile instead`); throw new Error('ungrounded'); }
+    }
     typing(false);
     if (said) addMsg('bot', said, { sources: calls.length ? [] : ctx.map(c => c.t) });
     for (const tc of calls) {
@@ -2556,6 +2599,12 @@ Rules:
     }
     const nav = Object.keys(SECTIONS).find(k => low.includes(k));
     if (nav && /\b(show|go|take|open|scroll|see|dikhao|le chalo|jao)\b/.test(low)) { await TOOLS.go_to({ section: nav }); return addMsg('bot', `Taking you to ${nav}.`); }
+    // topics her profile does not cover: say so instead of showing loosely related notes
+    if (/\b(salary|ctc|package|pay(?:ing)?|notice period|age|old is|born|birthday|school|schooling|10th|12th|class (?:10|12)|relocat\w*|shift|languages? (?:does )?she speak|speaks?|married|family|husband|parents|hobb(?:y|ies)|weakness(?:es)?|strengths?|religion|caste|address|phone|mobile|whatsapp number)\b/i.test(low) && !/\b(payroll|pay cycles?|calling|agent)\b/i.test(low)) {
+      const phone = /\b(phone|mobile|whatsapp number)\b/i.test(low);
+      trace('search_profile → not covered by her profile');
+      return addMsg('bot', phone ? 'This agent doesn\'t share Aparna\'s phone number. You can email her at anandaparna1203@gmail.com, send her a message here or book a call.' : 'That isn\'t in Aparna\'s profile, so I can\'t answer it. I can send her your question and she can reply to you directly.', { actions: [{ label: 'Send her a message', say: 'Send Aparna a message' }, { label: 'Tell me about her', say: 'Tell me about Aparna' }] });
+    }
     const hits = topNotes(text);
     const generic = /\b(who|about|introduce|yourself|bare|baare|kaun|summary|tell me)\b/.test(low) && (!hits.length || hits[0].t === 'Summary' || toks(text).length === 0);
     const best = generic ? [KB[0], KB[1]] : hits;
@@ -2580,7 +2629,7 @@ Rules:
     } catch (err) {
       mode = 'local';
       if (err.message === 'cooldown') trace('model is cooling down (free tier allows one reply per 45 s), answering with the built-in planner');
-      else if (err.message !== 'mid-flow') trace('model unavailable, using the built-in planner');
+      else if (err.message !== 'mid-flow' && err.message !== 'ungrounded') trace('model unavailable, using the built-in planner');
       typing(false);
       try { await localTurn(text); } catch (e) { addMsg('bot', 'Sorry, something went wrong. Please try again.'); }
       endTrace();
